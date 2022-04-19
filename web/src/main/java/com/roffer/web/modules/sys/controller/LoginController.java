@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -46,7 +47,11 @@ public class LoginController {
 
     @ApiOperation(value = "退出登录")
     @PostMapping("/logOut")
-    public Object logOut(){
+    public Object logOut(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        String id = TokenUtil.getIdFromToken(token);
+        System.out.println(id);
+
         return R.ok();
     }
 }
