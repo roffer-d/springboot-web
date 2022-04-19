@@ -1,0 +1,11 @@
+package ${package.Service};
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${package.Entity}.${entity};
+
+/**
+ * @author roffer
+ */
+public interface ${entity}Service extends IService<${entity}> {
+}
+

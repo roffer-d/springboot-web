@@ -1,0 +1,11 @@
+package com.roffer.web.modules.sys.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.roffer.web.modules.sys.entity.BasicRoleMenu;
+
+/**
+ * @author roffer
+ */
+public interface BasicRoleMenuService extends IService<BasicRoleMenu> {
+}
+

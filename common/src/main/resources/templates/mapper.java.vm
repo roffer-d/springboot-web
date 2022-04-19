@@ -1,0 +1,11 @@
+package ${package.Mapper};
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import ${package.Entity}.${entity};
+
+/**
+ * @author roffer
+ */
+public interface ${entity}Mapper extends BaseMapper<${entity}> {
+}
+

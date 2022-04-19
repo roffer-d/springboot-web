@@ -1,0 +1,30 @@
+#代码生成好之后,输出路径 ,基本输出路径
+outputDir: /Users/roffer/Documents/idea/basic/web/src/main/java
+
+#mapper.xml SQL映射文件目录
+outputDirXml: /Users/roffer/Documents/idea/basic/web/src/main/resources/mapper/sys
+
+#是否生成前端vue文件 false不生成 true生成
+generateVue: false
+#前端vue文件存放位置
+vueOutputPath: /Users/roffer/downloads/index.vue
+
+#设置作者
+author: Roffer
+
+#自定义包路径
+parent: com.roffer.web.modules.sys
+
+#数据库连接信息
+jdbcUrl: jdbc:mysql://localhost:3306/basic?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+jdbcUser: root
+jdbcPwd: Mysql123
+jdbcDriverClassName: com.mysql.cj.jdbc.Driver
+
+#保存数据时自动填充时间字段
+insertTableFill: create_time
+#更新数据时自动填充时间字段
+updateTableFill: update_time
+
+#要生成的表，多个表逗号隔开
+tabNames: basic_user,basic_role,basic_role_menu,basic_user_role,basic_menu
