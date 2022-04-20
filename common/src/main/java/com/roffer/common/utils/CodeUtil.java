@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.BooleanString;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -181,13 +180,44 @@ public class CodeUtil {
         });
 
         if(this.generateVue){
-            String templateVuePath = "/templates/index.vm";
-            // 自定义配置会被优先输出
-            focList.add(new FileOutConfig(templateVuePath) {
+            String templateListPath = "/templates/list.vue.vm";
+            String templateEditPath = "/templates/edit.vue.vm";
+            String templateApiPath = "/templates/api.js.vm";
+            String templateRouterPath = "/templates/router.js.vm";
+
+            /** 生成前端列表页面 **/
+            focList.add(new FileOutConfig(templateListPath) {
                 @Override
                 public String outputFile(TableInfo tableInfo) {
-                    // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                    return vueOutputPath;
+                    // 自定义输出文件名
+                    return vueOutputPath + "/" + tableInfo.getEntityPath() + "/list.vue";
+                }
+            });
+
+            /** 生成前端编辑页面 **/
+            focList.add(new FileOutConfig(templateEditPath) {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输出文件名
+                    return vueOutputPath + "/" + tableInfo.getEntityPath() + "/components/edit.vue";
+                }
+            });
+
+            /** 生成前端api接口请求js文件 **/
+            focList.add(new FileOutConfig(templateApiPath) {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输出文件名
+                    return vueOutputPath + "/" + tableInfo.getEntityPath() + "/api.js";
+                }
+            });
+
+            /** 生成前端路由js文件 **/
+            focList.add(new FileOutConfig(templateRouterPath) {
+                @Override
+                public String outputFile(TableInfo tableInfo) {
+                    // 自定义输出文件名
+                    return vueOutputPath + "/" + tableInfo.getEntityPath() + "/router.js";
                 }
             });
         }

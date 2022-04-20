@@ -1,0 +1,188 @@
+<template>
+    <div class="${table.entityPath}-page">
+        <div class="search-box">
+        #foreach($field in ${table.fields})
+            <el-input v-model="searchData.${field.propertyName}" placeholder="${field.comment}" style="width: 200px;" class="mr-20" />
+        #end
+            <el-button class="mr-10" type="primary" @click="search">查询</el-button>
+            <el-button class="mr-10" @click="reset">重设</el-button>
+            <el-button type="success" @click="handlerAdd" style="float: right">添加</el-button>
+        </div>
+        <div class="data-list" v-loading="loading">
+            <el-table :data="userList" style="width: 100%">
+            #foreach($field in ${table.fields})
+                <el-table-column prop="${field.propertyName}" label="${field.comment}" />
+            #end
+                <el-table-column label="操作" width="200" >
+                    <template #default="{row}">
+                        <el-tag class="mr-10" @click="handlerEdit(row)" type="danger" >编辑</el-tag>
+                        <el-tag class="mr-10" @click="handlerDelete(row)" type="danger" >删除</el-tag>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <el-pagination
+                    v-model:currentPage="searchData.pageNum"
+                    v-model:page-size="searchData.pageSize"
+                    :hide-on-single-page="hidePager"
+                    :page-sizes="pageSizeOption"
+                    small
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+            />
+        </div>
+
+        <el-dialog v-model="modelVisible" :title="modelTitle" width="30%"
+                   :close-on-click-modal="false"
+                   :close-on-press-escape="false"
+                   @closed="modelClosed"
+        >
+            <edit :id="${table.entityPath}Id" @success="addSuccess" v-if="modelVisible"/>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+    import {ref, reactive, toRefs, defineComponent,computed} from 'vue'
+    import * as ${table.entityPath}Api from './api'
+    import {ElMessageBox, ElMessage} from 'element-plus'
+    import edit from './components/edit'
+
+    export default defineComponent({
+        name: "list",
+        components: {edit},
+        setup(props, content) {
+            const data = reactive({
+                pageSizeOption:[10,20,50,100],
+                searchData: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    #foreach($field in ${table.fields})
+                    ${field.propertyName}:undefined,
+                    #end
+                },
+                ${table.entityPath}List: [],
+                total: 0,
+                loading: true,
+                modelVisible: false,
+                modelTitle: '添加$!{table.comment}',
+                ${table.entityPath}Id: undefined,
+            })
+
+            /** 是否隐藏分页组件，当数据总条数小于每页显示的数据条数时隐藏 **/
+            let hidePager = computed(()=>{
+                return Math.floor(data.total / data.searchData.pageSize) == 0
+            })
+
+            /** 查询、搜索$!{table.comment} **/
+            const search = () => {
+                ${table.entityPath}Api.query(data.searchData).then(res => {
+                    if (res.code == 200) {
+                        data.total = res.data.total
+                        data.${table.entityPath}List = res.data.list
+                    }
+                }).finally(() => {
+                    data.loading = false
+                })
+            }
+
+            /** 每页显示条数改变 **/
+            const handleSizeChange = (pageSize)=>{
+                data.searchData.pageSize = pageSize
+                search()
+            }
+
+            /** 页码改变 **/
+            const handleCurrentChange = (pageNum)=>{
+                data.searchData.pageNum = pageNum
+                search()
+            }
+
+            /** 删除$!{table.comment} **/
+            const handlerDelete = (${table.entityPath}) => {
+                ElMessageBox.confirm(`确认删除`, `删除提示`,
+                        {
+                            confirmButtonText: '删除',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                        })
+                        .then(() => {
+                            ${table.entityPath}Api.del({id: ${table.entityPath}.id}).then(res => {
+                                if (res.code == 200) {
+                                    ElMessage({
+                                        type: 'success',
+                                        message: `删除成功!`
+                                    })
+                                    search()
+                                }
+                            })
+                        })
+            }
+
+            /** 显示添加$!{table.comment}弹窗 **/
+            const handlerAdd = () => {
+                data.modelTitle = '添加$!{table.comment}'
+                data.modelVisible = true
+            }
+
+            /** 显示编辑弹窗 **/
+            const handlerEdit = (${table.entityPath}) => {
+                data.${table.entityPath}Id = ${table.entityPath}.id
+                data.modelTitle = '编辑$!{table.comment}'
+                data.modelVisible = true
+            }
+
+            /** 添加成功回调 **/
+            const addSuccess = () => {
+                data.modelVisible = false
+                reset()
+            }
+
+            /** 弹窗关闭之后 **/
+            const modelClosed = () => {
+                data.${table.entityPath}Id = undefined
+            }
+
+            const reset = () => {
+                data.searchData = {
+                    pageNum: 1,
+                    pageSize: 10,
+                    #foreach($field in ${table.fields})
+                    ${field.propertyName}:undefined,
+                    #end
+                }
+                search()
+            }
+
+            search()
+
+            return {
+                ...toRefs(data),
+                handlerDelete,
+                handlerAdd,
+                handlerEdit,
+                modelClosed,
+                addSuccess,
+                search,
+                reset,
+                handleSizeChange,
+                handleCurrentChange,
+                hidePager,
+            }
+        }
+    })
+</script>
+
+<style scoped lang="scss">
+    .${table.entityPath}-page {
+        background: #fff;
+        padding: 20px;
+        height: calc(100vh - 190px);
+
+        .data-list {
+            margin-top: 20px;
+        }
+    }
+</style>

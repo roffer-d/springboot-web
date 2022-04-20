@@ -1,0 +1,68 @@
+import {post,form} from '@/config/request'
+const api = {
+    list:'/${table.entityPath}/listPage',//$!{table.comment}列表
+    save:'/${table.entityPath}/save',//添加$!{table.comment}
+    update:'/${table.entityPath}/update',//更新$!{table.comment}
+    del:'/${table.entityPath}/delete',//删除$!{table.comment}
+    getById:'/${table.entityPath}/getById',//根据id获取$!{table.comment}信息
+}
+
+/**
+ * @desc 查询$!{table.comment}列表
+ * @params:
+ *   params(Object): 参数
+ * @auth Roffer
+ * @date ${date}
+ *
+ */
+export function query(params={}){
+    return form(api.list,params)
+}
+
+/**
+ * @desc 更新$!{table.comment}
+ * @params:
+ *   params(Object): 参数
+ * @auth Roffer
+ * @date ${date}
+ *
+ */
+export function update(params={}){
+    return form(api.update,params)
+}
+
+/**
+ * @desc 删除$!{table.comment}
+ * @params:
+ *   params(Object): 参数
+ * @auth Roffer
+ * @date ${date}
+ *
+ */
+export function del(params={}){
+    return form(api.del,params)
+}
+
+/**
+ * @desc 添加$!{table.comment}
+ * @params:
+ *   params(Object): 参数
+ * @auth Roffer
+ * @date ${date}
+ *
+ */
+export function save(params={}){
+    return form(api.save,params)
+}
+
+/**
+ * @desc 根据Id获取$!{table.comment}信息
+ * @params:
+ *   params(Object): 参数
+ * @auth Roffer
+ * @date ${date}
+ *
+ */
+export function getById(params={}){
+    return form(api.getById,params)
+}

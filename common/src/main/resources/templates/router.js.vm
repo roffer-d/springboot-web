@@ -1,0 +1,10 @@
+export default [
+    {
+        path: '/${table.entityPath}',
+        name: '${table.entityPath}',
+        component: () => import('@/view/${table.entityPath}/list'),
+        meta: {
+            title: "$!{table.comment}管理"
+        },
+    }
+]
