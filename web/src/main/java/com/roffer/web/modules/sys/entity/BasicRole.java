@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author Roffer
- * @since 2022-04-20
+ * @since 2022-04-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,12 +24,10 @@ public class BasicRole implements Serializable {
 
     private static final long serialVersionUID=1L;
 
-      private Long id;
+      private String id;
 
-    private String role;
-
-    @ApiModelProperty(value = "是否启用")
-    private Boolean status;
+    @ApiModelProperty(value = "角色名称")
+    private String name;
 
     @ApiModelProperty(value = "创建时间")
       @TableField(fill = FieldFill.INSERT)

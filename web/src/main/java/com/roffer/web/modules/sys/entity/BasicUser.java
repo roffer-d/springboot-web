@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author Roffer
- * @since 2022-04-19
+ * @since 2022-04-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -26,7 +26,7 @@ public class BasicUser implements Serializable {
 
       private String id;
 
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "真实姓名")
     private String name;
 
     @ApiModelProperty(value = "登录账号")

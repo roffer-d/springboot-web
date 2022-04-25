@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * @description 菜单
  * @author roffer
- * @date 2022-04-20
+ * @date 2022-04-25
  */
 @Api("菜单相关")
 public class BasicMenuController {
@@ -45,6 +46,10 @@ public class BasicMenuController {
     @ApiOperation(value = "分页菜单")
     @PostMapping("/listPage")
     public Object listPage(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String router,
+            @RequestParam(required = false) String icon,
+            @RequestParam(required = false) String remark,
             @RequestParam(required = false) Long pageNum,
             @RequestParam(required = false) Long pageSize) {
 
@@ -56,7 +61,19 @@ public class BasicMenuController {
         }
 
         QueryWrapper queryWrapper = new QueryWrapper();
-        //queryWrapper.like("basicMenu",${basicMenu})
+        if (StringUtils.isNotBlank(name)) {
+            queryWrapper.like("name", name);
+        }
+        if (StringUtils.isNotBlank(router)) {
+            queryWrapper.like("router", router);
+        }
+        if (StringUtils.isNotBlank(icon)) {
+            queryWrapper.like("icon", icon);
+        }
+        if (StringUtils.isNotBlank(remark)) {
+            queryWrapper.like("remark", remark);
+        }
+
         basicMenuService.page(basicMenuPage,queryWrapper);
 
         long total = basicMenuPage.getTotal();

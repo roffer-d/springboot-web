@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author Roffer
- * @since 2022-04-20
+ * @since 2022-04-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -21,7 +21,7 @@ public class BasicRoleMenu implements Serializable {
 
     private static final long serialVersionUID=1L;
 
-      private Long id;
+      private String id;
 
     @ApiModelProperty(value = "角色id")
     private Long roleId;

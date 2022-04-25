@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @description 用户
  * @author roffer
- * @date 2022-04-18
+ * @date 2022-04-25
  */
 @Api("用户相关")
 public class BasicUserController {
@@ -33,8 +33,8 @@ public class BasicUserController {
     @ApiOperation(value = "根据Id获取用户")
     @PostMapping("/getById")
     public Object getById(@RequestParam String id) {
-        BasicUser user = basicUserService.getById(id);
-        return R.ok().data("user", user);
+        BasicUser basicUser = basicUserService.getById(id);
+        return R.ok().data("basicUser", basicUser);
     }
 
     @ApiOperation(value = "获取全部用户")
@@ -46,31 +46,39 @@ public class BasicUserController {
     @ApiOperation(value = "分页用户")
     @PostMapping("/listPage")
     public Object listPage(
-            @RequestParam(required = false) String account,
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) String account,
+            @RequestParam(required = false) String password,
+            @RequestParam(required = false) String email,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) Long pageNum,
             @RequestParam(required = false) Long pageSize) {
 
         Page<BasicUser> basicUserPage = null;
-        if (null == pageNum && null == pageSize) {
+        if(null == pageNum && null == pageSize){
             basicUserPage = new Page<>();
-        } else {
+        }else{
             basicUserPage = new Page<>(pageNum, pageSize);
         }
 
         QueryWrapper queryWrapper = new QueryWrapper();
-        if (StringUtils.isNotBlank(account)) {
-            queryWrapper.like("account", account);
-        }
         if (StringUtils.isNotBlank(name)) {
             queryWrapper.like("name", name);
         }
+        if (StringUtils.isNotBlank(account)) {
+            queryWrapper.like("account", account);
+        }
+        if (StringUtils.isNotBlank(password)) {
+            queryWrapper.like("password", password);
+        }
+        if (StringUtils.isNotBlank(email)) {
+            queryWrapper.like("email", email);
+        }
         if (StringUtils.isNotBlank(status)) {
-            queryWrapper.eq("status", status);
+            queryWrapper.like("status", status);
         }
 
-        basicUserService.page(basicUserPage, queryWrapper);
+        basicUserService.page(basicUserPage,queryWrapper);
 
         long total = basicUserPage.getTotal();
         List<BasicUser> basicUserList = basicUserPage.getRecords();

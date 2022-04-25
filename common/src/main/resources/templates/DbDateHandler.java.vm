@@ -1,4 +1,4 @@
-package com.roffer.web.config;
+package ${package.Controller};
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
@@ -15,7 +15,7 @@ import java.util.Properties;
 /**
  * @description mybatis-plus insert、update 自动插入时间策略配置
  * @author Dulongfei
- * @date 2022/4/12 15:11
+ * @date ${date}
  */
 public class DbDateHandler implements MetaObjectHandler {
     private static Properties properties = new Properties();

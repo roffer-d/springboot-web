@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * @description 角色
  * @author roffer
- * @date 2022-04-20
+ * @date 2022-04-25
  */
 @Api("角色相关")
 public class BasicRoleController {
@@ -45,6 +46,7 @@ public class BasicRoleController {
     @ApiOperation(value = "分页角色")
     @PostMapping("/listPage")
     public Object listPage(
+            @RequestParam(required = false) String name,
             @RequestParam(required = false) Long pageNum,
             @RequestParam(required = false) Long pageSize) {
 
@@ -56,7 +58,10 @@ public class BasicRoleController {
         }
 
         QueryWrapper queryWrapper = new QueryWrapper();
-        //queryWrapper.like("basicRole",${basicRole})
+        if (StringUtils.isNotBlank(name)) {
+            queryWrapper.like("name", name);
+        }
+
         basicRoleService.page(basicRolePage,queryWrapper);
 
         long total = basicRolePage.getTotal();

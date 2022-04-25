@@ -1,11 +1,18 @@
 <template>
     <div class="${table.entityPath}-edit">
-        <el-form ref="${table.entityPath}FormRef" :model="form" :rules="rules" label-width="80px">
-            #foreach($field in ${table.fields})
+        <el-form ref="${table.entityPath}FormRef" :model="data.form" :rules="data.rules" label-width="80px">
+        #foreach($field in ${table.fields})
+            #if(${field.propertyName.equals("id")} || $!{field.fill.equals("INSERT")} || $!{field.fill.equals("INSERT_UPDATE")})
+            #elseif(${field.comment})
             <el-form-item label="${field.comment}" prop="${field.propertyName}">
-                <el-input v-model="form.${field.propertyName}" placeholder="${field.comment}"/>
+                <el-input v-model="data.form.${field.propertyName}" placeholder="${field.comment}"/>
+            </el-form-item>
+            #else
+            <el-form-item label="${field.propertyName}" prop="${field.propertyName}">
+                <el-input v-model="data.form.${field.propertyName}" placeholder="${field.propertyName}"/>
             </el-form-item>
             #end
+        #end
             <el-form-item>
                 <el-button type="primary" @click="submitForm(${table.entityPath}FormRef)">保存</el-button>
                 <el-button @click="resetForm(${table.entityPath}FormRef)">重设</el-button>
@@ -13,93 +20,96 @@
         </el-form>
     </div>
 </template>
-<script>
-    import {ref, reactive, toRefs, defineComponent} from 'vue'
-    import * as ${table.entityPath}Api from '../api'
-    import {ElMessage} from 'element-plus'
+<script setup>
+import {ref, reactive,onMounted} from 'vue'
+import * as ${table.entityPath}Api from '../api'
+import {ElMessage} from 'element-plus'
 
-    export default defineComponent({
-        name: '${table.entityPath}-edit',
-        props: ['id'],
-        emits: ['success'],
-        setup(props, content) {
-            const ${table.entityPath}FormRef = ref(null)
+const ${table.entityPath}FormRef = ref(null)
+const props = defineProps(['id'])
+const emit = defineEmits(['success']);
 
-            const data = reactive({
-                form: {
-                    #foreach($field in ${table.fields})
-                    ${field.propertyName}:'',
-                    #end
+const data = reactive({
+    form: {
+    #foreach($field in ${table.fields})
+        #if($!{field.fill.equals("INSERT")} || $!{field.fill.equals("INSERT_UPDATE")})
+        #elseif(${field.comment})
+        ${field.propertyName}:'',//${field.comment}
+        #else
+        ${field.propertyName}:'',
+        #end
+    #end
+    },
+    rules:{
+    #foreach($field in ${table.fields})
+        #if(${field.propertyName.equals("id")} || $!{field.fill.equals("INSERT")} || $!{field.fill.equals("INSERT_UPDATE")})
+        #elseif(${field.comment})
+        ${field.propertyName}: [
+            {required: true, message: '${field.comment}不能为空'},
+        ],
+        #else
+        ${field.propertyName}: [
+            {required: true, message: '${field.propertyName}不能为空'},
+        ],
+        #end
+    #end
+    }
+})
+
+#if(${field.comment})
+/** 获取$!{table.comment}信息 **/
+#else
+/** 获取$!{table.propertyName}信息 **/
+#end
+const getUser = () => {
+    if (props.id) {
+        ${table.entityPath}Api.getById({id: props.id}).then(res => {
+            if (res.code == 200) {
+                for(let key in data.form){
+                    data.form[key] = res.data.${table.entityPath}[key]
                 }
-            })
-
-            /** 获取$!{table.comment}信息 **/
-            const getUser = () => {
-                if (props.id) {
-                    ${table.entityPath}Api.getById({id: props.id}).then(res => {
-                        if (res.code == 200) {
-                            for(let key in data.form){
-                                data.form[key] = res.data.${table.entityPath}[key]
-                            }
-                        } else {
-                            ElMessage({
-                                type: 'danger',
-                                message: res.message
-                            })
-                        }
-                    })
-                }
-            }
-
-            /** 表单验证配置 **/
-            const rules = reactive({
-                #foreach($field in ${table.fields})
-                ${field.propertyName}: [
-                    {required: true, message: '${field.comment}不能为空'},
-                ],
-                #end
-            })
-
-            /** 提交保存 **/
-            const submitForm = async (form) => {
-                form = form || ${table.entityPath}FormRef.value
-                await form.validate((valid, fields) => {
-                    if (valid) {
-                        let form = JSON.parse(JSON.stringify(data.form))
-
-                        let method = props.id ? ${table.entityPath}Api.update : ${table.entityPath}Api.save
-                        let title = props.id ? '编辑' : '添加'
-                        method(form).then(res => {
-                            if (res.code == 200) {
-                                ElMessage({
-                                    type: 'success',
-                                    message: `${title}成功!`
-                                })
-
-                                resetForm()
-
-                                content.emit('success', form)
-                            }
-                        })
-                    }
+            } else {
+                ElMessage({
+                    type: 'danger',
+                    message: res.message
                 })
             }
+        })
+    }
+}
 
-            /** 重置表单 **/
-            const resetForm = (form) => {
-                form = form || ${table.entityPath}FormRef.value
-                form.resetFields()
-            }
+/** 提交保存 **/
+const submitForm = async (form) => {
+    form = form || ${table.entityPath}FormRef.value
+    await form.validate((valid, fields) => {
+        if (valid) {
+            let form = JSON.parse(JSON.stringify(data.form))
 
-            getUser()
+            let method = props.id ? ${table.entityPath}Api.update : ${table.entityPath}Api.save
+            let title = props.id ? '编辑' : '添加'
+            method(form).then(res => {
+                if (res.code == 200) {
+                    ElMessage({
+                        type: 'success',
+                        message: `${title}成功!`
+                    })
 
-            return {
-                ...toRefs(data),
-                ${table.entityPath}FormRef,
-                rules,
-                submitForm,
-                resetForm,
-            }
+                    resetForm()
+
+                    emit('success', form)
+                }
+            })
         }
     })
+}
+
+/** 重置表单 **/
+const resetForm = (form) => {
+    form = form || ${table.entityPath}FormRef.value
+    form.resetFields()
+}
+
+onMounted(() => {
+    getUser()
+})
 </script>
