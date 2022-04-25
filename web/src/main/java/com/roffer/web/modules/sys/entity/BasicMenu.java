@@ -27,7 +27,7 @@ public class BasicMenu implements Serializable {
       private String id;
 
     @ApiModelProperty(value = "父级菜单id")
-    private Long parentId;
+    private String parentId;
 
     @ApiModelProperty(value = "名称")
     private String name;

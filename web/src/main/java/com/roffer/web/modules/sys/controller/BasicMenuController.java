@@ -1,5 +1,6 @@
 package com.roffer.web.modules.sys.controller;
 
+import com.roffer.common.utils.TreeNode;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import com.roffer.web.modules.sys.entity.BasicMenu;
 
@@ -80,6 +81,13 @@ public class BasicMenuController {
         List<BasicMenu> basicMenuList = basicMenuPage.getRecords();
 
         return R.ok().data("total", total).data("list", basicMenuList);
+    }
+
+    @ApiOperation(value = "菜单树")
+    @PostMapping("/menuTree")
+    public Object menuTree() {
+        List<TreeNode> menuTree = basicMenuService.menuTree();
+        return R.ok().data("list",menuTree);
     }
 
     @ApiOperation(value = "添加菜单")

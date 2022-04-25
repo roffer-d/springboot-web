@@ -14,5 +14,5 @@ import javax.annotation.Resource;
 @Service
 public class ${entity}ServiceImpl extends ServiceImpl<${entity}Mapper,${entity}> implements ${entity}Service {
     @Resource
-    private ${entity}Mapper userMapper;
+    private ${entity}Mapper ${table.entityPath}Mapper;
 }
