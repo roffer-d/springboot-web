@@ -78,6 +78,9 @@ public class BasicUserController {
             queryWrapper.like("status", status);
         }
 
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.orderByDesc("update_time");
+
         basicUserService.page(basicUserPage,queryWrapper);
 
         long total = basicUserPage.getTotal();

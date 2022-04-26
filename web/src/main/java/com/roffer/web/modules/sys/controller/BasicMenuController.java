@@ -75,6 +75,12 @@ public class BasicMenuController {
             queryWrapper.like("remark", remark);
         }
 
+        /** 排除根菜单0 **/
+        queryWrapper.ne("pid","0");
+
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.orderByDesc("update_time");
+
         basicMenuService.page(basicMenuPage,queryWrapper);
 
         long total = basicMenuPage.getTotal();

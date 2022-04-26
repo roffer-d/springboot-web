@@ -28,7 +28,7 @@ public class BasicMenuServiceImpl extends ServiceImpl<BasicMenuMapper,BasicMenu>
         List<BasicMenu> menuList = menuMapper.selectList(new QueryWrapper<>());
         List<TreeNode> nodeList = new ArrayList<>();
         menuList.forEach(menu->{
-            TreeNode treeNode = new TreeNode(menu.getId(),menu.getParentId(),menu.getName());
+            TreeNode treeNode = new TreeNode(menu.getId(),menu.getPid(),menu.getName());
             Map<String,Object> meta = new HashMap<>();
             meta.put("router",menu.getRouter());
             meta.put("icon",menu.getIcon());

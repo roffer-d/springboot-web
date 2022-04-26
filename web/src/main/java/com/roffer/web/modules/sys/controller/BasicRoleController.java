@@ -62,6 +62,9 @@ public class BasicRoleController {
             queryWrapper.like("name", name);
         }
 
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.orderByDesc("update_time");
+
         basicRoleService.page(basicRolePage,queryWrapper);
 
         long total = basicRolePage.getTotal();
