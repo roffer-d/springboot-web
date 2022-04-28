@@ -3,7 +3,7 @@ package com.roffer.web.config;
 import com.google.gson.Gson;
 import com.roffer.common.http.ConstEnum;
 import com.roffer.common.http.R;
-import com.roffer.common.utils.TokenUtil;
+import com.roffer.common.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -29,7 +29,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader("Authorization");
         if (StringUtils.isNotBlank(token)) {
-            if (TokenUtil.verify(token)) {
+            if (TokenUtils.verify(token)) {
                 return true;
             }
         }

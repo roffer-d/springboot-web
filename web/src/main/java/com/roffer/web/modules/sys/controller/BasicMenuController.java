@@ -1,6 +1,7 @@
 package com.roffer.web.modules.sys.controller;
 
-import com.roffer.common.utils.TreeNode;
+import com.roffer.common.utils.BeanUtils;
+import com.roffer.common.utils.TreeUtils;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import com.roffer.web.modules.sys.entity.BasicMenu;
 
@@ -17,7 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/basicMenu")
@@ -75,8 +80,8 @@ public class BasicMenuController {
             queryWrapper.like("remark", remark);
         }
 
-        /** 排除根菜单0 **/
-        queryWrapper.ne("pid","0");
+        /** 查询根菜单下的直属菜单 **/
+        queryWrapper.eq("pid","1518483664025964545");
 
         queryWrapper.orderByDesc("create_time");
         queryWrapper.orderByDesc("update_time");
@@ -86,13 +91,29 @@ public class BasicMenuController {
         long total = basicMenuPage.getTotal();
         List<BasicMenu> basicMenuList = basicMenuPage.getRecords();
 
-        return R.ok().data("total", total).data("list", basicMenuList);
+        String childrenKey = "children";
+        List<Object> resultList = basicMenuList.stream().map(menu -> {
+            /** 查询当前菜单下的所有子菜单 **/
+            QueryWrapper query = new QueryWrapper();
+            query.eq("pid",menu.getId());
+            List<BasicMenu> childrenList = basicMenuService.list(query);
+
+            /** 将当前菜单下的所有子菜单封装成树形菜单 **/
+            List<Map<String, Object>> listMap = TreeUtils.buildTree(childrenList, "id", menu.getId(), "pid", childrenKey);
+
+            /** 动态生成子节点数据，覆盖当前遍历对象menu（生成了一个新的Object，非当前menu） **/
+            Map<String, Object> addProperties = new HashMap<>();
+            addProperties.put(childrenKey, listMap);
+            return BeanUtils.getTarget(menu, addProperties);
+        }).collect(Collectors.toList());
+
+        return R.ok().data("total", total).data("list", resultList);
     }
 
     @ApiOperation(value = "菜单树")
     @PostMapping("/menuTree")
     public Object menuTree() {
-        List<TreeNode> menuTree = basicMenuService.menuTree();
+        List<Map<String,Object>> menuTree = basicMenuService.tree(null);
         return R.ok().data("list",menuTree);
     }
 

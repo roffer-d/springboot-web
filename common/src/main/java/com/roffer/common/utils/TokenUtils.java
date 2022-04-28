@@ -14,7 +14,7 @@ import java.util.Map;
  * @description 生成登录签名token
  * @date 2022/4/18 16:53
  */
-public class TokenUtil {
+public class TokenUtils {
     /**
      * @description 设置过期时间：1天
      * @author Dulongfei

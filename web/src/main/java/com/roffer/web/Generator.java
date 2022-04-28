@@ -1,6 +1,6 @@
 package com.roffer.web;
 
-import com.roffer.common.utils.CodeUtil;
+import com.roffer.common.utils.CodeUtils;
 
 /**
  * @author Dulongfei
@@ -10,7 +10,7 @@ import com.roffer.common.utils.CodeUtil;
  */
 public class Generator {
     public static void main(String[] args) {
-        new CodeUtil(
+        new CodeUtils(
                 Generator.class.getResourceAsStream("/mybatiesplus-config.yml"))
                 .doGenerator();
     }

@@ -3,7 +3,7 @@ package com.roffer.web.modules.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.roffer.common.http.ConstEnum;
 import com.roffer.common.http.R;
-import com.roffer.common.utils.TokenUtil;
+import com.roffer.common.utils.TokenUtils;
 import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.service.BasicUserService;
 import io.swagger.annotations.Api;
@@ -40,7 +40,7 @@ public class LoginController {
             return R.customError(ConstEnum.NO_USER.getCode(),ConstEnum.NO_USER.getMsg());
         }else{
             BasicUser user = userList.get(0);
-            String token = TokenUtil.generator(user.getId());
+            String token = TokenUtils.generator(user.getId());
             return R.ok().data("token",token).data("user",user);
         }
     }
@@ -49,7 +49,7 @@ public class LoginController {
     @PostMapping("/logOut")
     public Object logOut(HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        String id = TokenUtil.getIdFromToken(token);
+        String id = TokenUtils.getIdFromToken(token);
         System.out.println(id);
 
         return R.ok();

@@ -20,7 +20,7 @@ import java.util.Properties;
 /**
  * @author roffer
  */
-public class CodeUtil {
+public class CodeUtils {
     private String jdbcUrl;
     private String jdbcDriverClassName;
     private String jdbcUser;
@@ -53,7 +53,7 @@ public class CodeUtil {
       * @author Dulongfei
       * @date 2022/4/7 13:17
       */
-    public CodeUtil(
+    public CodeUtils(
             String jdbcUrl, String jdbcDriverClassName, String jdbcUser, String jdbcPwd,
             String parent, String outputDir, String outputDirXml, Boolean generateVue,
             String vueOutputPath, String tabNames, String author,
@@ -95,7 +95,7 @@ public class CodeUtil {
       * @author Dulongfei
       * @date 2022/4/7 13:29
       */
-    public CodeUtil(InputStream inputStream){
+    public CodeUtils(InputStream inputStream){
         Properties pros = new Properties();
         try {
             pros.load(new InputStreamReader(inputStream, "UTF-8"));
