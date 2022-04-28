@@ -113,7 +113,10 @@ public class BasicMenuController {
     @ApiOperation(value = "菜单树")
     @PostMapping("/menuTree")
     public Object menuTree() {
-        List<Map<String,Object>> menuTree = basicMenuService.tree(null);
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.orderByDesc("create_time");
+        wrapper.orderByDesc("update_time");
+        List<Map<String,Object>> menuTree = basicMenuService.tree(wrapper);
         return R.ok().data("list",menuTree);
     }
 
