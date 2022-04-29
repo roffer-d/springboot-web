@@ -2,6 +2,7 @@ package com.roffer.web.modules.sys.controller;
 
 import com.roffer.common.utils.BeanUtils;
 import com.roffer.common.utils.TreeUtils;
+import com.roffer.web.modules.sys.entity.BasicRole;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import com.roffer.web.modules.sys.entity.BasicMenu;
 
@@ -46,6 +47,9 @@ public class BasicMenuController {
     @ApiOperation(value = "获取全部菜单")
     @PostMapping("/list")
     public Object list() {
+        QueryWrapper<BasicMenu> queryWrapper = new QueryWrapper();
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.orderByDesc("update_time");
         return R.ok().data("list", basicMenuService.list());
     }
 
@@ -66,7 +70,7 @@ public class BasicMenuController {
             basicMenuPage = new Page<>(pageNum, pageSize);
         }
 
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<BasicMenu> queryWrapper = new QueryWrapper();
         if (StringUtils.isNotBlank(name)) {
             queryWrapper.like("name", name);
         }
@@ -95,7 +99,7 @@ public class BasicMenuController {
         List<Object> resultList = basicMenuList.stream().map(menu -> {
             /** 查询当前菜单下的所有子菜单 **/
             QueryWrapper query = new QueryWrapper();
-            query.eq("pid",menu.getId());
+            query.like("pids",menu.getId());
             List<BasicMenu> childrenList = basicMenuService.list(query);
 
             /** 将当前菜单下的所有子菜单封装成树形菜单 **/
@@ -137,7 +141,10 @@ public class BasicMenuController {
     @ApiOperation(value = "删除菜单")
     @PostMapping("/delete")
     public Object delete(String id) {
-        basicMenuService.removeById(id);
+        /** 删除当前菜单以及所有子菜单 **/
+        QueryWrapper<BasicMenu> query = new QueryWrapper<>();
+        query.eq("id",id).or().like("pids",id);
+        basicMenuService.remove(query);
         return R.ok();
     }
 

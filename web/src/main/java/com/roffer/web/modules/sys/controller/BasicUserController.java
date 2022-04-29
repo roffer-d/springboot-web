@@ -1,11 +1,11 @@
 package com.roffer.web.modules.sys.controller;
 
-import com.roffer.web.modules.sys.service.BasicUserService;
-import com.roffer.web.modules.sys.entity.BasicUser;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
+import com.roffer.web.modules.sys.entity.BasicUser;
+import com.roffer.web.modules.sys.entity.BasicUserRole;
+import com.roffer.web.modules.sys.service.BasicUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +40,9 @@ public class BasicUserController {
     @ApiOperation(value = "获取全部用户")
     @PostMapping("/list")
     public Object list() {
+        QueryWrapper<BasicUser> queryWrapper = new QueryWrapper();
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.orderByDesc("update_time");
         return R.ok().data("list", basicUserService.list());
     }
 
@@ -114,6 +117,20 @@ public class BasicUserController {
     @PostMapping("/deleteByIds")
     public Object deleteByIds(@RequestParam String ids) {
         basicUserService.removeByIds(Arrays.asList(ids.split(",")));
+        return R.ok();
+    }
+
+    @ApiOperation(value = "获取用户角色")
+    @PostMapping("/userRole")
+    public Object userRole(@RequestParam String userId) {
+        List<BasicUserRole> basicUserRoles = basicUserService.userRole(userId);
+        return R.ok().data("list",basicUserRoles);
+    }
+
+    @ApiOperation(value = "保存用户角色")
+    @PostMapping("/saveRole")
+    public Object saveRole(@RequestParam String userId,@RequestParam String roleIds) {
+        basicUserService.saveRole(userId,roleIds);
         return R.ok();
     }
 }

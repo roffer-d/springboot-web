@@ -1,5 +1,7 @@
 package com.roffer.web.modules.sys.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.roffer.web.modules.sys.entity.BasicRoleMenu;
 import com.roffer.web.modules.sys.service.BasicRoleService;
 import com.roffer.web.modules.sys.entity.BasicRole;
 
@@ -9,14 +11,12 @@ import com.roffer.common.http.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/basicRole")
@@ -40,7 +40,10 @@ public class BasicRoleController {
     @ApiOperation(value = "获取全部角色")
     @PostMapping("/list")
     public Object list() {
-        return R.ok().data("list", basicRoleService.list());
+        QueryWrapper<BasicRole> queryWrapper = new QueryWrapper();
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.orderByDesc("update_time");
+        return R.ok().data("list", basicRoleService.list(queryWrapper));
     }
 
     @ApiOperation(value = "分页角色")
@@ -57,7 +60,7 @@ public class BasicRoleController {
             basicRolePage = new Page<>(pageNum, pageSize);
         }
 
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<BasicRole> queryWrapper = new QueryWrapper();
         if (StringUtils.isNotBlank(name)) {
             queryWrapper.like("name", name);
         }
@@ -98,6 +101,20 @@ public class BasicRoleController {
     @PostMapping("/deleteByIds")
     public Object deleteByIds(@RequestParam String ids) {
         basicRoleService.removeByIds(Arrays.asList(ids.split(",")));
+        return R.ok();
+    }
+
+    @ApiOperation(value = "获取角色关联的权限")
+    @PostMapping("/getRoleAuth")
+    public Object getRoleAuth(@RequestParam String roleId) {
+        List<BasicRoleMenu> roleAuth = basicRoleService.getRoleAuth(roleId);
+        return R.ok().data("list",roleAuth);
+    }
+
+    @ApiOperation(value = "保存角色权限")
+    @PostMapping("/saveRoleAuth")
+    public Object saveRoleAuth(@RequestBody JSONObject auth) {
+        basicRoleService.saveRoleAuth(auth);
         return R.ok();
     }
 }

@@ -60,7 +60,14 @@ public class ${entity}Controller {
     #end
     @PostMapping("/list")
     public Object list() {
-        return R.ok().data("list", ${table.entityPath}Service.list());
+        QueryWrapper<${entity}> queryWrapper = new QueryWrapper();
+    #if($!{field.fill.equals("INSERT")})
+        queryWrapper.orderByDesc("${field.name}")
+    #end
+    #if($!{field.fill.equals("INSERT_UPDATE")})
+        queryWrapper.orderByDesc("${field.name}")
+    #end
+        return R.ok().data("list", ${table.entityPath}Service.list(queryWrapper));
     }
 
     #if(${table.comment})
@@ -86,7 +93,7 @@ public class ${entity}Controller {
             ${table.entityPath}Page = new Page<>(pageNum, pageSize);
         }
 
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<${entity}> queryWrapper = new QueryWrapper();
     #foreach($field in ${table.fields})
         #if(${field.propertyName.equals("id")} || $!{field.fill.equals("INSERT")} || $!{field.fill.equals("INSERT_UPDATE")} || !${field.propertyType.equals("String")})
         #else

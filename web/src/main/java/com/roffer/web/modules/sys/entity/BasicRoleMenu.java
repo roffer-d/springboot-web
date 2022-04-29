@@ -24,10 +24,10 @@ public class BasicRoleMenu implements Serializable {
       private String id;
 
     @ApiModelProperty(value = "角色id")
-    private Long roleId;
+    private String roleId;
 
     @ApiModelProperty(value = "菜单id")
-    private Long menuId;
+    private String menuId;
 
     @ApiModelProperty(value = "权限类型(1、新增，2、编辑，3、删除，4、查询，5、导出，6、导入)")
     private String authorityType;

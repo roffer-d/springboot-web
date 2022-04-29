@@ -24,10 +24,10 @@ public class BasicUserRole implements Serializable {
       private String id;
 
     @ApiModelProperty(value = "用户id")
-    private Integer userId;
+    private String userId;
 
     @ApiModelProperty(value = "角色id")
-    private Integer roleId;
+    private String roleId;
 
 
 }

@@ -35,10 +35,10 @@
                     v-model:currentPage="data.searchData.pageNum"
                     v-model:page-size="data.searchData.pageSize"
                     :hide-on-single-page="hidePager"
-                    :page-sizes="pageSizeOption"
+                    :page-sizes="data.pageSizeOption"
                     small
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="total"
+                    :total="data.total"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
             />
