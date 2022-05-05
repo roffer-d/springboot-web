@@ -13,5 +13,7 @@ public interface BasicUserService extends IService<BasicUser> {
     void saveRole(String userId,String roleIds);
 
     List<BasicUserRole> userRole(String userId);
+
+    void removeUserAndRole(String id);
 }
 

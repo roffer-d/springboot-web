@@ -109,7 +109,7 @@ public class BasicUserController {
     @ApiOperation(value = "删除用户")
     @PostMapping("/delete")
     public Object delete(String id) {
-        basicUserService.removeById(id);
+        basicUserService.removeUserAndRole(id);
         return R.ok();
     }
 

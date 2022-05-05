@@ -29,5 +29,14 @@ public interface BasicRoleService extends IService<BasicRole> {
       * @date 2022/4/29 13:50
       */
     void saveRoleAuth(JSONObject auth);
+
+    /**
+      * @description 批量删除角色以及角色关联的菜单
+      * @params:
+      *   ids(String): 要删除的id，多个逗号隔开
+      * @author Roffer
+      * @date 2022/5/3 18:08
+      */
+    void removeRoleAndMenuByIds(String ids);
 }
 

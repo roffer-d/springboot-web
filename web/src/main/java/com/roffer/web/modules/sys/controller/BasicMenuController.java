@@ -141,10 +141,7 @@ public class BasicMenuController {
     @ApiOperation(value = "删除菜单")
     @PostMapping("/delete")
     public Object delete(String id) {
-        /** 删除当前菜单以及所有子菜单 **/
-        QueryWrapper<BasicMenu> query = new QueryWrapper<>();
-        query.eq("id",id).or().like("pids",id);
-        basicMenuService.remove(query);
+        basicMenuService.removeMenuAndAuth(id);
         return R.ok();
     }
 

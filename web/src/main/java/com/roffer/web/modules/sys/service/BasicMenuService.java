@@ -18,5 +18,14 @@ public interface BasicMenuService extends IService<BasicMenu> {
      * @date 2022/4/25 15:35
      */
     public List<Map<String,Object>> tree(QueryWrapper query);
+
+    /**
+      * @description 删除菜单以及所有子菜单、角色菜单权限
+      * @params:
+      *   id(String): 菜单id
+      * @author Roffer
+      * @date 2022/5/5 11:01
+      */
+    void removeMenuAndAuth(String id);
 }
 

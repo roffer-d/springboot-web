@@ -7,12 +7,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.roffer.web.modules.sys.entity.BasicRole;
 import com.roffer.web.modules.sys.entity.BasicRoleMenu;
+import com.roffer.web.modules.sys.entity.BasicUserRole;
 import com.roffer.web.modules.sys.mapper.BasicRoleMapper;
 import com.roffer.web.modules.sys.mapper.BasicRoleMenuMapper;
+import com.roffer.web.modules.sys.mapper.BasicUserRoleMapper;
 import com.roffer.web.modules.sys.service.BasicRoleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +28,9 @@ public class BasicRoleServiceImpl extends ServiceImpl<BasicRoleMapper,BasicRole>
 
     @Resource
     private BasicRoleMenuMapper roleMenuMapper;
+
+    @Resource
+    private BasicUserRoleMapper userRoleMapper;
 
     @Override
     public List<BasicRoleMenu> getRoleAuth(String roleId) {
@@ -53,5 +59,25 @@ public class BasicRoleServiceImpl extends ServiceImpl<BasicRoleMapper,BasicRole>
                 roleMenuMapper.insert(roleMenu);
             });
         }
+    }
+
+    @Override
+    public void removeRoleAndMenuByIds(String ids) {
+        String[] array = ids.split(",");
+
+        /** 删除角色权限 **/
+        for(int i = 0 ; i < array.length ; i ++){
+            QueryWrapper<BasicRoleMenu> roleMenuQueryWrapper = new QueryWrapper<>();
+            roleMenuQueryWrapper.eq("role_id",array[i]);
+            roleMenuMapper.delete(roleMenuQueryWrapper);
+        }
+
+        /** 删除用户角色 **/
+        QueryWrapper<BasicUserRole> userRoleQueryWrapper = new QueryWrapper<>();
+        userRoleQueryWrapper.in("role_id",array);
+        userRoleMapper.delete(userRoleQueryWrapper);
+
+        /** 删除角色 **/
+        roleMapper.deleteBatchIds(Arrays.asList(array));
     }
 }

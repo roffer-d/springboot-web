@@ -93,14 +93,14 @@ public class BasicRoleController {
     @ApiOperation(value = "删除角色")
     @PostMapping("/delete")
     public Object delete(String id) {
-        basicRoleService.removeById(id);
+        basicRoleService.removeRoleAndMenuByIds(id);
         return R.ok();
     }
 
     @ApiOperation(value = "批量删除角色")
     @PostMapping("/deleteByIds")
     public Object deleteByIds(@RequestParam String ids) {
-        basicRoleService.removeByIds(Arrays.asList(ids.split(",")));
+        basicRoleService.removeRoleAndMenuByIds(ids);
         return R.ok();
     }
 
