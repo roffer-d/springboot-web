@@ -21,7 +21,7 @@
     </div>
 </template>
 <script setup>
-import {ref, reactive,onMounted} from 'vue'
+import {ref, reactive,onMounted,defineProps,defineEmits} from 'vue'
 import * as ${table.entityPath}Api from '../api'
 import {ElMessage} from 'element-plus'
 
