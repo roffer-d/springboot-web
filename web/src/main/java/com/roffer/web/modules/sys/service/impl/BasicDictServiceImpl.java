@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * @author roffer
+ * @author Roffer
  */
 @Service
 public class BasicDictServiceImpl extends ServiceImpl<BasicDictMapper,BasicDict> implements BasicDictService {

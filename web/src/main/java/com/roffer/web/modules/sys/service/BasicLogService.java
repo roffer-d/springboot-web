@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.roffer.web.modules.sys.entity.BasicLog;
 
 /**
- * @author roffer
+ * @author Roffer
  */
 public interface BasicLogService extends IService<BasicLog> {
 }

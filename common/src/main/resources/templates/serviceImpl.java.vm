@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * @author roffer
+ * @author Roffer
  */
 @Service
 public class ${entity}ServiceImpl extends ServiceImpl<${entity}Mapper,${entity}> implements ${entity}Service {

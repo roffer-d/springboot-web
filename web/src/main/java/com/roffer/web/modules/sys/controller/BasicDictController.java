@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping("/basicDict")
 /**
  * @description 字典
- * @author roffer
+ * @author Roffer
  * @date 2022-05-06
  */
 @Api("字典相关")
@@ -41,14 +41,18 @@ public class BasicDictController {
     @PostMapping("/list")
     public Object list() {
         QueryWrapper<BasicDict> queryWrapper = new QueryWrapper();
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.orderByDesc("update_time");
+
         return R.ok().data("list", basicDictService.list(queryWrapper));
     }
 
     @ApiOperation(value = "分页字典")
     @PostMapping("/listPage")
     public Object listPage(
-            @RequestParam(required = false) String code,
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) String code,
+            @RequestParam(required = false) String type,
             @RequestParam(required = false) String remark,
             @RequestParam(required = false) Long pageNum,
             @RequestParam(required = false) Long pageSize) {
@@ -61,16 +65,20 @@ public class BasicDictController {
         }
 
         QueryWrapper<BasicDict> queryWrapper = new QueryWrapper();
+        if (StringUtils.isNotBlank(name)) {
+            queryWrapper.like("name", name);
+        }
         if (StringUtils.isNotBlank(code)) {
             queryWrapper.like("code", code);
         }
-        if (StringUtils.isNotBlank(name)) {
-            queryWrapper.like("name", name);
+        if (StringUtils.isNotBlank(type)) {
+            queryWrapper.like("type", type);
         }
         if (StringUtils.isNotBlank(remark)) {
             queryWrapper.like("remark", remark);
         }
-
+        queryWrapper.orderByDesc("create_time");
+        queryWrapper.orderByDesc("update_time");
 
         basicDictService.page(basicDictPage,queryWrapper);
 
@@ -106,5 +114,14 @@ public class BasicDictController {
     public Object deleteByIds(@RequestParam String ids) {
         basicDictService.removeByIds(Arrays.asList(ids.split(",")));
         return R.ok();
+    }
+
+    @ApiOperation(value = "获取分类下的字典数据")
+    @PostMapping("/getDict")
+    public Object getDict(@RequestParam String type) {
+        QueryWrapper<BasicDict> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("type",type);
+
+        return R.ok().data("list", basicDictService.list(queryWrapper));
     }
 }

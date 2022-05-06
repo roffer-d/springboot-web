@@ -55,6 +55,7 @@ public class BasicRoleServiceImpl extends ServiceImpl<BasicRoleMapper,BasicRole>
                 roleMenu.setRoleId(roleId);
                 roleMenu.setMenuId(obj.getString("menuId"));
                 roleMenu.setAuthorityType(obj.getString("authorityType"));
+                roleMenu.setAuthCode(obj.getString("authCode"));
 
                 roleMenuMapper.insert(roleMenu);
             });

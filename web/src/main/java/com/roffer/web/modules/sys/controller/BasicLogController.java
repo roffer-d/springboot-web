@@ -22,8 +22,8 @@ import java.util.List;
 @RequestMapping("/basicLog")
 /**
  * @description 操作日志
- * @author roffer
- * @date 2022-05-05
+ * @author Roffer
+ * @date 2022-05-06
  */
 @Api("操作日志相关")
 public class BasicLogController {
@@ -41,6 +41,8 @@ public class BasicLogController {
     @PostMapping("/list")
     public Object list() {
         QueryWrapper<BasicLog> queryWrapper = new QueryWrapper();
+        queryWrapper.orderByDesc("create_time");
+
         return R.ok().data("list", basicLogService.list(queryWrapper));
     }
 
@@ -48,6 +50,7 @@ public class BasicLogController {
     @PostMapping("/listPage")
     public Object listPage(
             @RequestParam(required = false) String remark,
+            @RequestParam(required = false) String userId,
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) Long pageNum,
             @RequestParam(required = false) Long pageSize) {
@@ -63,10 +66,13 @@ public class BasicLogController {
         if (StringUtils.isNotBlank(remark)) {
             queryWrapper.like("remark", remark);
         }
+        if (StringUtils.isNotBlank(userId)) {
+            queryWrapper.like("userId", userId);
+        }
         if (StringUtils.isNotBlank(userName)) {
             queryWrapper.like("userName", userName);
         }
-
+        queryWrapper.orderByDesc("create_time");
 
         basicLogService.page(basicLogPage,queryWrapper);
 
@@ -74,5 +80,33 @@ public class BasicLogController {
         List<BasicLog> basicLogList = basicLogPage.getRecords();
 
         return R.ok().data("total", total).data("list", basicLogList);
+    }
+
+    @ApiOperation(value = "添加操作日志")
+    @PostMapping("/save")
+    public Object save(BasicLog basicLog) {
+        basicLogService.save(basicLog);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "更新操作日志")
+    @PostMapping("/update")
+    public Object update(BasicLog basicLog) {
+        basicLogService.updateById(basicLog);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "删除操作日志")
+    @PostMapping("/delete")
+    public Object delete(String id) {
+        basicLogService.removeById(id);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "批量删除操作日志")
+    @PostMapping("/deleteByIds")
+    public Object deleteByIds(@RequestParam String ids) {
+        basicLogService.removeByIds(Arrays.asList(ids.split(",")));
+        return R.ok();
     }
 }

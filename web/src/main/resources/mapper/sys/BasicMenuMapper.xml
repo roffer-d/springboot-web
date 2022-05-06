@@ -11,6 +11,7 @@
         <result column="pname" property="pname" />
         <result column="pnames" property="pnames" />
         <result column="router" property="router" />
+        <result column="auth_code" property="authCode" />
         <result column="icon" property="icon" />
         <result column="sort" property="sort" />
         <result column="remark" property="remark" />

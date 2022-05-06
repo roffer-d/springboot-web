@@ -23,13 +23,13 @@ import java.util.List;
 #if(${table.comment})
 /**
  * @description ${table.comment}
- * @author roffer
+ * @author Roffer
  * @date ${date}
  */
 #else
 /**
  * @description ${entity}
- * @author roffer
+ * @author Roffer
  * @date ${date}
  */
 #end
@@ -61,12 +61,15 @@ public class ${entity}Controller {
     @PostMapping("/list")
     public Object list() {
         QueryWrapper<${entity}> queryWrapper = new QueryWrapper();
-    #if($!{field.fill.equals("INSERT")})
-        queryWrapper.orderByDesc("${field.name}")
+    #foreach($field in ${table.fields})
+        #if($!{field.fill.equals("INSERT")})
+        queryWrapper.orderByDesc("${field.name}");
+        #end
+        #if($!{field.fill.equals("INSERT_UPDATE")})
+        queryWrapper.orderByDesc("${field.name}");
+        #end
     #end
-    #if($!{field.fill.equals("INSERT_UPDATE")})
-        queryWrapper.orderByDesc("${field.name}")
-    #end
+
         return R.ok().data("list", ${table.entityPath}Service.list(queryWrapper));
     }
 
@@ -101,14 +104,13 @@ public class ${entity}Controller {
             queryWrapper.like("${field.propertyName}", ${field.propertyName});
         }
         #end
-    #end
-
         #if($!{field.fill.equals("INSERT")})
-        queryWrapper.orderByDesc("${field.name}")
+        queryWrapper.orderByDesc("${field.name}");
         #end
         #if($!{field.fill.equals("INSERT_UPDATE")})
-        queryWrapper.orderByDesc("${field.name}")
+        queryWrapper.orderByDesc("${field.name}");
         #end
+    #end
 
         ${table.entityPath}Service.page(${table.entityPath}Page,queryWrapper);
 

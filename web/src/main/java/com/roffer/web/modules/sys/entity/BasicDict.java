@@ -26,13 +26,16 @@ public class BasicDict implements Serializable {
 
       private String id;
 
-    @ApiModelProperty(value = "字典标识")
-    private String code;
-
-    @ApiModelProperty(value = "字典名称")
+    @ApiModelProperty(value = "名称")
     private String name;
 
-    @ApiModelProperty(value = "字典描述")
+    @ApiModelProperty(value = "值")
+    private String code;
+
+    @ApiModelProperty(value = "分类")
+    private String type;
+
+    @ApiModelProperty(value = "描述")
     private String remark;
 
     @ApiModelProperty(value = "创建时间")

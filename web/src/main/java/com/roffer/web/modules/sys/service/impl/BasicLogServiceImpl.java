@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * @author roffer
+ * @author Roffer
  */
 @Service
 public class BasicLogServiceImpl extends ServiceImpl<BasicLogMapper,BasicLog> implements BasicLogService {
