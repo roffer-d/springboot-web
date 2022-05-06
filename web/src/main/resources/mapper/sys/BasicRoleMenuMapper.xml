@@ -15,4 +15,18 @@
         id, role_id, menu_id, authority_type
     </sql>
 
+    <select id="getRoleMenu" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            basic_role_menu rm
+        WHERE
+                rm.role_id IN (
+                SELECT
+                    ur.role_id
+                FROM
+                    basic_user_role ur
+                WHERE
+                    ur.user_id = #{userId})
+    </select>
 </mapper>

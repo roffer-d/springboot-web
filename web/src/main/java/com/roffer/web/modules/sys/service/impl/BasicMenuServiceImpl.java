@@ -59,4 +59,28 @@ public class BasicMenuServiceImpl extends ServiceImpl<BasicMenuMapper,BasicMenu>
         /** 删除当前菜单以及所有子菜单 **/
         menuMapper.delete(menuQueryWrapper);
     }
+
+    @Override
+    /**
+     * @description 获取用户菜单
+     * @params:
+     *   userId(String): 用户id
+     * @author Roffer
+     * @date 2022/5/5 14:42
+     */
+    public List<BasicMenu> getUserMenu(String userId) {
+        return menuMapper.getUserMenu(userId);
+    }
+
+    @Override
+    /**
+     * @description 获取角色权限
+     * @params:
+     *   userId(String): 用户id
+     * @author Roffer
+     * @date 2022/5/5 16:11
+     */
+    public List<BasicRoleMenu> getRoleMenu(String userId) {
+        return roleMenuMapper.getRoleMenu(userId);
+    }
 }

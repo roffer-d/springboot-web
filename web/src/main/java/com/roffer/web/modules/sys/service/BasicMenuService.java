@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.roffer.web.modules.sys.entity.BasicMenu;
+import com.roffer.web.modules.sys.entity.BasicRoleMenu;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public interface BasicMenuService extends IService<BasicMenu> {
      * @author Roffer
      * @date 2022/4/25 15:35
      */
-    public List<Map<String,Object>> tree(QueryWrapper query);
+    List<Map<String,Object>> tree(QueryWrapper query);
 
     /**
       * @description 删除菜单以及所有子菜单、角色菜单权限
@@ -27,5 +28,23 @@ public interface BasicMenuService extends IService<BasicMenu> {
       * @date 2022/5/5 11:01
       */
     void removeMenuAndAuth(String id);
+
+    /**
+      * @description 获取用户菜单
+      * @params:
+      *   userId(String): 用户id
+      * @author Roffer
+      * @date 2022/5/5 14:42
+      */
+    List<BasicMenu> getUserMenu(String userId);
+
+    /**
+      * @description 获取角色权限
+      * @params:
+      *   userId(String): 用户id
+      * @author Roffer
+      * @date 2022/5/5 16:11
+      */
+    List<BasicRoleMenu> getRoleMenu(String userId);
 }
 
