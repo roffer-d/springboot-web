@@ -1,14 +1,3 @@
-#代码生成好之后,输出路径 ,基本输出路径
-outputDir: /Users/roffer/Documents/idea/basic/web/src/main/java
-
-#mapper.xml SQL映射文件目录
-outputDirXml: /Users/roffer/Documents/idea/basic/web/src/main/resources/mapper/sys
-
-#是否生成前端vue模块 false不生成 true生成
-generateVue: true
-#前端vue文件存放位置
-vueOutputPath: /Users/roffer/Documents/webstorm/vue3-web/src/view
-
 #设置作者
 author: Roffer
 
@@ -31,6 +20,21 @@ insertJavaFill: createTime
 updateTableFill: update_time
 #java类中的字段
 updateJavaFill: updateTime
+
+#代码生成好之后,输出路径 ,基本输出路径
+outputDir: /Users/roffer/Documents/idea/basic/web/src/main/java
+
+#mapper.xml SQL映射文件目录
+outputDirXml: /Users/roffer/Documents/idea/basic/web/src/main/resources/mapper/sys
+
+#是否生成前端vue模块 false不生成 true生成
+generateVue: true
+#前端vue文件存放位置
+vueOutputPath: /Users/roffer/Documents/webstorm/vue3-web/src/view/custom
+#前端vue路由path前缀
+vueRouterPrefix: /custom
+#前端vue页面路径
+vuePagePath: /view/custom
 
 #要生成的表，多个表逗号隔开
 #tabNames: basic_user,basic_role,basic_role_menu,basic_user_role,basic_menu,basic_log,basic_dict

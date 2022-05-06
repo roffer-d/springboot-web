@@ -13,9 +13,7 @@ import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author roffer
@@ -30,6 +28,8 @@ public class CodeUtils {
     private String outputDirXml;
     private Boolean generateVue;
     private String vueOutputPath;
+    private String vuePagePath;
+    private String vueRouterPrefix;
     private String tabNames;
     private String author;
     private String insertTableFill;
@@ -45,7 +45,10 @@ public class CodeUtils {
       *   parent(String): 指定生成的包名
       *   outputDir(String): 指定输出java文件输出目录
       *   outputDirXml(String): 指定输出mapper文件输出目录
+      *   generateVue(Boolean): 是否生成vue文件
       *   vueOutputPath(String): 指定输出vue文件输出目录
+      *   vueRouterPrefix(String): 指定前端vue路由path前缀
+      *   vuePagePath(String): 指定前端vue页面路径
       *   tabNames(String): 需要生成的数据库表名，多个逗号隔开
       *   author(String): 作者姓名
       *   insertTableFill(String): 保存数据时自动填充时间字段
@@ -56,7 +59,7 @@ public class CodeUtils {
     public CodeUtils(
             String jdbcUrl, String jdbcDriverClassName, String jdbcUser, String jdbcPwd,
             String parent, String outputDir, String outputDirXml, Boolean generateVue,
-            String vueOutputPath, String tabNames, String author,
+            String vueOutputPath, String vuePagePath,String vueRouterPrefix,String tabNames, String author,
             String insertTableFill,String updateTableFill){
 
         this.jdbcUrl = jdbcUrl;
@@ -69,6 +72,8 @@ public class CodeUtils {
         this.outputDirXml = outputDirXml;
         this.generateVue = generateVue;
         this.vueOutputPath = vueOutputPath;
+        this.vuePagePath = vuePagePath;
+        this.vueRouterPrefix = vueRouterPrefix;
         this.tabNames = tabNames;
         this.insertTableFill = insertTableFill;
         this.updateTableFill = updateTableFill;
@@ -85,6 +90,10 @@ public class CodeUtils {
       *   parent(String): 指定生成的包名
       *   outputDir(String): 指定输出java文件输出目录
       *   outputDirXml(String): 指定输出mapper文件输出目录
+      *   generateVue(Boolean): 是否生成vue文件
+      *   vueOutputPath(String): 指定输出vue文件输出目录
+      *   vueRouterPrefix(String): 指定前端vue路由path前缀
+      *   vuePagePath(String): 指定前端vue页面路径
       *   tabNames(String): 需要生成的数据库表名，多个逗号隔开
       *   author(String): 作者姓名
       *   insertTableFill(String): 保存数据时自动填充时间字段
@@ -109,6 +118,8 @@ public class CodeUtils {
             this.outputDirXml = pros.getProperty("outputDirXml");
             this.generateVue = "true".equalsIgnoreCase(pros.getProperty("generateVue"));
             this.vueOutputPath = pros.getProperty("vueOutputPath");
+            this.vueRouterPrefix = pros.getProperty("vueRouterPrefix");
+            this.vuePagePath = pros.getProperty("vuePagePath");
             this.tabNames = pros.getProperty("tabNames");
             this.insertTableFill = pros.getProperty("insertTableFill");
             this.updateTableFill = pros.getProperty("updateTableFill");
@@ -153,7 +164,11 @@ public class CodeUtils {
         InjectionConfig cfg = new InjectionConfig() {
             @Override
             public void initMap() {
-                // to do nothing
+                Map<String, Object> map = new HashMap<>();
+                map.put("vueRouterPrefix",vueRouterPrefix);
+                map.put("vuePagePath",vuePagePath);
+                InjectionConfig injectionConfig = this.setMap(map);
+                System.out.println(injectionConfig.getMap());
             }
         };
 
