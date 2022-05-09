@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.roffer.web.modules.sys.entity.BasicRoleMenu;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author roffer
@@ -16,6 +17,6 @@ public interface BasicRoleMenuMapper extends BaseMapper<BasicRoleMenu> {
      * @author Roffer
      * @date 2022/5/5 16:11
      */
-    List<BasicRoleMenu> getRoleMenu(String userId);
+    List<Map> getRoleMenu(String userId);
 }
 

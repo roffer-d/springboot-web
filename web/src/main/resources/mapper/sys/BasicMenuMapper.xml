@@ -10,8 +10,8 @@
         <result column="name" property="name" />
         <result column="pname" property="pname" />
         <result column="pnames" property="pnames" />
-        <result column="router" property="router" />
-        <result column="auth_code" property="authCode" />
+        <result column="route" property="route" />
+        <result column="auth" property="auth" />
         <result column="icon" property="icon" />
         <result column="sort" property="sort" />
         <result column="remark" property="remark" />
@@ -26,7 +26,7 @@
 
     <select id="getUserMenu" resultMap="BaseResultMap">
         SELECT
-            *
+            m.id,m.pid,m.name,m.route,m.icon
         FROM
             basic_menu m
         WHERE

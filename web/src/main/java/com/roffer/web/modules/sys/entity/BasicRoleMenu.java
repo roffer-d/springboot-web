@@ -29,9 +29,6 @@ public class BasicRoleMenu implements Serializable {
     @ApiModelProperty(value = "菜单id")
     private String menuId;
 
-    @ApiModelProperty(value = "权限标识")
-    private String authCode;
-
     @ApiModelProperty(value = "权限类型(query、查询，add、新增，edit、编辑，delete、删除，import、导入，export、导出，examine、审核)")
     private String authorityType;
 

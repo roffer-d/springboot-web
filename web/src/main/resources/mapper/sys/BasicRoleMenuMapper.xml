@@ -7,7 +7,6 @@
         <id column="id" property="id" />
         <result column="role_id" property="roleId" />
         <result column="menu_id" property="menuId" />
-        <result column="auth_code" property="authCode" />
         <result column="authority_type" property="authorityType" />
     </resultMap>
 
@@ -16,18 +15,23 @@
         id, role_id, menu_id, authority_type
     </sql>
 
-    <select id="getRoleMenu" resultMap="BaseResultMap">
+    <select id="getRoleMenu" resultType="Map">
         SELECT
-            *
+            m.name,
+            m.route,
+            rm.authority_type as auth
         FROM
-            basic_role_menu rm
+            basic_role_menu rm,
+            basic_menu m
         WHERE
-                rm.role_id IN (
-                SELECT
-                    ur.role_id
-                FROM
-                    basic_user_role ur
-                WHERE
-                    ur.user_id = #{userId})
+            rm.menu_id = m.id
+          AND rm.role_id IN (
+            SELECT
+                ur.role_id
+            FROM
+                basic_user_role ur
+            WHERE
+                ur.user_id = #{userId}
+        )
     </select>
 </mapper>

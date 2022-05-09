@@ -1,5 +1,6 @@
 package com.roffer.web.modules.sys.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -45,6 +46,8 @@ public interface BasicMenuService extends IService<BasicMenu> {
       * @author Roffer
       * @date 2022/5/5 16:11
       */
-    List<BasicRoleMenu> getRoleMenu(String userId);
+    List<Map> getRoleMenu(String userId);
+
+    void menuAuth(JSONObject auth);
 }
 

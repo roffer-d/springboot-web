@@ -1,5 +1,6 @@
 package com.roffer.web.modules.sys.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.roffer.common.utils.BeanUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.common.utils.TreeUtils;
@@ -14,10 +15,7 @@ import com.roffer.common.http.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -125,7 +123,7 @@ public class BasicMenuController {
         List<Map<String,Object>> resultList = TreeUtils.buildTree(menuList,"id",ROOT_MENU_ID,"pid","children");
 
         /** 获取用户拥有的角色权限 **/
-        List<BasicRoleMenu> roleMenuList = basicMenuService.getRoleMenu(userId);
+        List<Map> roleMenuList = basicMenuService.getRoleMenu(userId);
 
         return R.ok().data("menuList",resultList).data("roleMenuList",roleMenuList);
     }
@@ -165,6 +163,13 @@ public class BasicMenuController {
     @PostMapping("/deleteByIds")
     public Object deleteByIds(@RequestParam String ids) {
         basicMenuService.removeByIds(Arrays.asList(ids.split(",")));
+        return R.ok();
+    }
+
+    @ApiOperation(value = "菜单权限配置")
+    @PostMapping("/menuAuth")
+    public Object menuAuth(@RequestBody JSONObject auth) {
+        basicMenuService.menuAuth(auth);
         return R.ok();
     }
 

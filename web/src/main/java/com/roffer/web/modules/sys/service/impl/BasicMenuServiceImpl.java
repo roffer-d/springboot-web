@@ -1,5 +1,7 @@
 package com.roffer.web.modules.sys.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.roffer.common.utils.TreeUtils;
@@ -80,7 +82,18 @@ public class BasicMenuServiceImpl extends ServiceImpl<BasicMenuMapper,BasicMenu>
      * @author Roffer
      * @date 2022/5/5 16:11
      */
-    public List<BasicRoleMenu> getRoleMenu(String userId) {
+    public List<Map> getRoleMenu(String userId) {
         return roleMenuMapper.getRoleMenu(userId);
+    }
+
+    @Override
+    public void menuAuth(JSONObject auth) {
+        String menuId = auth.getString("menuId");
+        String authList = auth.getString("authList");
+
+        BasicMenu menu = menuMapper.selectById(menuId);
+        menu.setAuth(authList);
+
+        menuMapper.updateById(menu);
     }
 }

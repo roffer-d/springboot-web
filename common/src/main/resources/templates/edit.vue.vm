@@ -14,8 +14,8 @@
             #end
         #end
             <el-form-item>
-                <el-button type="primary" @click="submitForm(${table.entityPath}FormRef)">保存</el-button>
-                <el-button @click="resetForm(${table.entityPath}FormRef)">重设</el-button>
+                <el-button type="primary" @click="submitForm">保存</el-button>
+                <el-button @click="resetForm">重设</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -79,8 +79,8 @@ const getUser = () => {
 }
 
 /** 提交保存 **/
-const submitForm = async (form) => {
-    form = form || ${table.entityPath}FormRef.value
+const submitForm = async () => {
+    let form = ${table.entityPath}FormRef.value
     await form.validate((valid, fields) => {
         if (valid) {
             let form = JSON.parse(JSON.stringify(data.form))
@@ -104,8 +104,8 @@ const submitForm = async (form) => {
 }
 
 /** 重置表单 **/
-const resetForm = (form) => {
-    form = form || ${table.entityPath}FormRef.value
+const resetForm = () => {
+    let form = ${table.entityPath}FormRef.value
     form.resetFields()
 }
 

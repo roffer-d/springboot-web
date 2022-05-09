@@ -47,10 +47,10 @@ public class BasicMenu implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "路由")
-    private String router;
+    private String route;
 
-    @ApiModelProperty(value = "权限标识")
-    private String authCode;
+    @ApiModelProperty(value = "拥有权限")
+    private String auth;
 
     @ApiModelProperty(value = "图标")
     private String icon;
@@ -58,7 +58,7 @@ public class BasicMenu implements Serializable {
     @ApiModelProperty(value = "排序")
     private Integer sort;
 
-    @ApiModelProperty(value = "菜单说明")
+    @ApiModelProperty(value = "描述")
     private String remark;
 
     @ApiModelProperty(value = "创建时间")
