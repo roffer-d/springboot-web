@@ -3,11 +3,13 @@ package com.roffer.web.config;
 import com.google.gson.Gson;
 import com.roffer.common.http.ConstEnum;
 import com.roffer.common.http.R;
+import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
 
+    @Resource
+    private RedisUtils redisUtils;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestMethod = "OPTIONS";
@@ -29,7 +34,8 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader("Authorization");
         if (StringUtils.isNotBlank(token)) {
-            if (TokenUtils.verify(token)) {
+            String redisKey = token.replaceAll("Bearer ", "");
+            if (TokenUtils.verify(token) && null != redisUtils.get(redisKey)) {
                 return true;
             }
         }

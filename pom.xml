@@ -26,7 +26,6 @@
         <basic>0.0.1-SNAPSHOT</basic>
 
         <java.version>1.8</java.version>
-        <spring-boot>2.6.1</spring-boot>
         <mysql-connector-java>8.0.28</mysql-connector-java>
         <mybatis-plus-boot-starter>3.3.2</mybatis-plus-boot-starter>
         <mybatis-plus-generator>3.3.2</mybatis-plus-generator>
@@ -42,6 +41,7 @@
         <commons-beanutils>1.9.3</commons-beanutils>
         <cglib-nodep>3.2.4</cglib-nodep>
         <fastjson>2.0.1</fastjson>
+        <jackson-core>2.11.3</jackson-core>
     </properties>
 
     <dependencies>
