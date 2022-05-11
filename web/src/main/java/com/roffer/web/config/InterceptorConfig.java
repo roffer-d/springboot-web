@@ -18,8 +18,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     private TokenInterceptor tokenInterceptor;
 
-    private static String[] EXCLUDES = {"/login","/createImg","/checkImg"};
-
     /*
      * @param tokenInterceptor
      * @return
@@ -40,14 +38,17 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        List<String> excludePath = new ArrayList<>();
         //放开权限
-        for(int i = 0 ; i < EXCLUDES.length ; i ++){
-            excludePath.add(EXCLUDES[i]);
-        }
+        List<String> excludePath = new ArrayList<>();
+        excludePath.add("/login");
+        excludePath.add("/createImg");
+        excludePath.add("/checkImg");
+        excludePath.add("/swagger-resources/**");
+        excludePath.add("/swagger-ui.html/**");
 
         //放开所有
 //        excludePath.add("/**");
+
         //静态资源
         excludePath.add("/static/**");
 

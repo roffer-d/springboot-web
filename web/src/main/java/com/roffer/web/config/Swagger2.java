@@ -22,8 +22,8 @@ public class Swagger2 {
     @Bean
     public Docket getUserDocket(){
         ApiInfo apiInfo=new ApiInfoBuilder()
-                .title("用户管理")
-                .description("用户管理相关接口描述")
+                .title("系统管理")
+                .description("系统管理相关Api")
                 .version("1.0.0")
                 .build();
         return new Docket(DocumentationType.SWAGGER_2)
