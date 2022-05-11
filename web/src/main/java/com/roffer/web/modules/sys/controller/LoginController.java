@@ -62,7 +62,7 @@ public class LoginController {
             BasicUser user = userList.get(0);
             String token = TokenUtils.generator(user.getId());
             //token存入redis，有效期1天
-            redisUtils.set(token, user, 60 * 60 * 24);
+            redisUtils.set(token, user, RedisConstEnum.MENU.getTtl());
             return R.ok().data("token", token).data("user", user);
         }
     }

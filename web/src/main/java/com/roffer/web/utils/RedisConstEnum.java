@@ -6,12 +6,14 @@ package com.roffer.web.utils;
  * @date 2022/4/19 10:34
  */
 public enum RedisConstEnum {
-    MENU("用户菜单", "menu_list_"),
-    ROLE("用户角色", "role_list_"),
-    LOGIN_IMAGE_INFO("登录拖拽图片信息", "image_info_");
+    /** ttl单位秒 **/
+    MENU("用户菜单", "menu_list_",60 * 60 * 24),
+    ROLE("用户角色", "role_list_",60 * 60 * 24),
+    LOGIN_IMAGE_INFO("登录拖拽图片信息", "image_info_",60 * 5);
 
     private String key;
     private String value;
+    private long ttl;
 
     public String getKey() {
         return key;
@@ -29,8 +31,17 @@ public enum RedisConstEnum {
         this.value = value;
     }
 
-    private RedisConstEnum(String msg, String value) {
+    public long getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(long ttl) {
+        this.ttl = ttl;
+    }
+
+    private RedisConstEnum(String msg, String value,long ttl) {
         this.key = msg;
         this.value = value;
+        this.ttl = ttl;
     }
 }
