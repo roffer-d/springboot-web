@@ -2,6 +2,7 @@ package com.roffer.web.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.roffer.common.utils.BeanUtils;
+import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.common.utils.TreeUtils;
 import com.roffer.web.modules.sys.entity.BasicRole;
@@ -12,6 +13,7 @@ import com.roffer.web.modules.sys.entity.BasicMenu;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
+import com.roffer.web.utils.RedisConstEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -35,11 +37,16 @@ import java.util.stream.Stream;
  */
 @Api("菜单相关")
 public class BasicMenuController {
-    /** 根菜单 **/
+    /**
+     * 根菜单
+     **/
     private String ROOT_MENU_ID = "1518483664025964545";
 
     @Resource
     private BasicMenuService basicMenuService;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @ApiOperation(value = "根据Id获取菜单")
     @PostMapping("/getById")
@@ -68,9 +75,9 @@ public class BasicMenuController {
             @RequestParam(required = false) Long pageSize) {
 
         Page<BasicMenu> basicMenuPage = null;
-        if(null == pageNum && null == pageSize){
+        if (null == pageNum && null == pageSize) {
             basicMenuPage = new Page<>();
-        }else{
+        } else {
             basicMenuPage = new Page<>(pageNum, pageSize);
         }
 
@@ -93,15 +100,15 @@ public class BasicMenuController {
             isSearch = true;
         }
 
-        if(!isSearch){
+        if (!isSearch) {
             /** 查询根菜单下的直属菜单 **/
-            queryWrapper.eq("pid",ROOT_MENU_ID);
+            queryWrapper.eq("pid", ROOT_MENU_ID);
         }
 
         queryWrapper.orderByDesc("create_time");
         queryWrapper.orderByDesc("update_time");
 
-        basicMenuService.page(basicMenuPage,queryWrapper);
+        basicMenuService.page(basicMenuPage, queryWrapper);
 
         long total = basicMenuPage.getTotal();
         List<BasicMenu> basicMenuList = basicMenuPage.getRecords();
@@ -114,18 +121,21 @@ public class BasicMenuController {
 
     @ApiOperation(value = "获取用户权限")
     @PostMapping("/getAuth")
-    public Object getAuth(HttpServletRequest request){
+    public Object getAuth(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         String userId = TokenUtils.getIdFromToken(token);
 
         /** 获取用户拥有的菜单 **/
         List<BasicMenu> menuList = basicMenuService.getUserMenu(userId);
-        List<Map<String,Object>> resultList = TreeUtils.buildTree(menuList,"id",ROOT_MENU_ID,"pid","children");
+        List<Map<String, Object>> resultList = TreeUtils.buildTree(menuList, "id", ROOT_MENU_ID, "pid", "children");
 
         /** 获取用户拥有的角色权限 **/
         List<Map> roleMenuList = basicMenuService.getRoleMenu(userId);
 
-        return R.ok().data("menuList",resultList).data("roleMenuList",roleMenuList);
+        redisUtils.set(RedisConstEnum.MENU.getValue() + userId, resultList, 60 * 60 * 24);
+        redisUtils.set(RedisConstEnum.ROLE.getValue() + userId, roleMenuList, 60 * 60 * 24);
+
+        return R.ok().data("menuList", resultList).data("roleMenuList", roleMenuList);
     }
 
     @ApiOperation(value = "菜单树")
@@ -134,8 +144,8 @@ public class BasicMenuController {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.orderByDesc("create_time");
         wrapper.orderByDesc("update_time");
-        List<Map<String,Object>> menuTree = basicMenuService.tree(wrapper);
-        return R.ok().data("list",menuTree);
+        List<Map<String, Object>> menuTree = basicMenuService.tree(wrapper);
+        return R.ok().data("list", menuTree);
     }
 
     @ApiOperation(value = "添加菜单")
@@ -174,18 +184,17 @@ public class BasicMenuController {
     }
 
     /**
-      * @description 获取菜单下的所有子菜单，组装成一棵树
-      * @params:
-      *   menuList(List): 菜单列表
-      * @author Roffer
-      * @date 2022/5/5 14:29
-      */
-    private List getChildrenMenu(List<BasicMenu> menuList){
+     * @description 获取菜单下的所有子菜单，组装成一棵树
+     * @params: menuList(List): 菜单列表
+     * @author Roffer
+     * @date 2022/5/5 14:29
+     */
+    private List getChildrenMenu(List<BasicMenu> menuList) {
         String childrenKey = "children";
         return menuList.stream().map(menu -> {
             /** 查询当前菜单下的所有子菜单 **/
             QueryWrapper query = new QueryWrapper();
-            query.like("pids",menu.getId());
+            query.like("pids", menu.getId());
             List<BasicMenu> childrenList = basicMenuService.list(query);
 
             /** 将当前菜单下的所有子菜单封装成树形菜单 **/

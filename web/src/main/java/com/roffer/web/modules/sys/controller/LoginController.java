@@ -7,6 +7,7 @@ import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.service.BasicUserService;
+import com.roffer.web.utils.RedisConstEnum;
 import com.roffer.web.utils.VerifyImageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * @author Dulongfei
@@ -46,69 +50,73 @@ public class LoginController {
 
     @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public Object login(@RequestParam String account,@RequestParam String password){
+    public Object login(@RequestParam String account, @RequestParam String password) {
         QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("account",account);
-        wrapper.eq("password",password);
-        wrapper.eq("status","1");
+        wrapper.eq("account", account);
+        wrapper.eq("password", password);
+        wrapper.eq("status", "1");
         List<BasicUser> userList = userService.list(wrapper);
-        if(userList.isEmpty()){
-            return R.customError(ConstEnum.NO_USER.getCode(),ConstEnum.NO_USER.getMsg());
-        }else{
+        if (userList.isEmpty()) {
+            return R.customError(ConstEnum.NO_USER.getCode(), ConstEnum.NO_USER.getMsg());
+        } else {
             BasicUser user = userList.get(0);
             String token = TokenUtils.generator(user.getId());
             //token存入redis，有效期1天
-            redisUtils.set(token,user,60 * 60 * 24);
-            return R.ok().data("token",token).data("user",user);
+            redisUtils.set(token, user, 60 * 60 * 24);
+            return R.ok().data("token", token).data("user", user);
         }
     }
 
     @ApiOperation(value = "退出登录")
     @PostMapping("/logOut")
-    public Object logOut(HttpServletRequest request){
+    public Object logOut(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        token = token.replaceAll("Bearer ", "");
-        redisUtils.del(token);
+        String userId = TokenUtils.getIdFromToken(token);
+        String redisTokenKey = token.replaceAll("Bearer ", "");
+
+        redisUtils.del(redisTokenKey);
+        redisUtils.del(RedisConstEnum.MENU.getValue() + userId);
+        redisUtils.del(RedisConstEnum.ROLE.getValue() + userId);
 
         return R.ok();
     }
 
     @ApiOperation(value = "生成滑块图片")
     @PostMapping("/createImg")
-    public Object createImg(){
+    public Object createImg() {
         Map<String, Object> resultMap = new HashMap<>();
-        String cacheKey = "image_info_"+System.currentTimeMillis();
-        try{
+        String cacheKey = RedisConstEnum.LOGIN_IMAGE_INFO.getValue() + System.currentTimeMillis();
+        try {
             Integer targetNum = new Random().nextInt(4) + 1;
 
-            File templateFile = ResourceUtils.getFile("classpath:"+templatePath);
-            File targetFile = ResourceUtils.getFile("classpath:"+targetPath+"/"+targetNum+".png");
-            resultMap = VerifyImageUtils.pictureTemplatesCut(templateFile, targetFile,"PNG","PNG");
+            File templateFile = ResourceUtils.getFile("classpath:" + templatePath);
+            File targetFile = ResourceUtils.getFile("classpath:" + targetPath + "/" + targetNum + ".png");
+            resultMap = VerifyImageUtils.pictureTemplatesCut(templateFile, targetFile, "PNG", "PNG");
             //缓存5分钟
-            redisUtils.set(cacheKey,resultMap,5 * 60);
-        }catch (FileNotFoundException e){
+            redisUtils.set(cacheKey, resultMap, 5 * 60);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        resultMap.put("cacheKey",cacheKey);
+        resultMap.put("cacheKey", cacheKey);
         return R.ok().data(resultMap);
     }
 
     @ApiOperation(value = "验证滑块图片")
     @PostMapping("/checkImg")
-    public Object checkImg(@RequestParam String cacheKey,@RequestParam int left){
+    public Object checkImg(@RequestParam String cacheKey, @RequestParam int left) {
         Boolean result = false;
-        Map<String,Object> map = redisUtils.get(cacheKey,Map.class);
-        if(!map.isEmpty()){
+        Map<String, Object> map = redisUtils.get(cacheKey, Map.class);
+        if (!map.isEmpty()) {
             int x = Integer.parseInt(String.valueOf(map.get("x")));
             result = left > x - 5 && left < x + 5;
 
             redisUtils.del(cacheKey);
         }
-        return R.ok().data("valid",result);
+        return R.ok().data("valid", result);
     }
 }
