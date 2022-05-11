@@ -106,6 +106,8 @@ public class LoginController {
         if(!map.isEmpty()){
             int x = Integer.parseInt(String.valueOf(map.get("x")));
             result = left > x - 5 && left < x + 5;
+
+            redisUtils.del(cacheKey);
         }
         return R.ok().data("valid",result);
     }
