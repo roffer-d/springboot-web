@@ -132,6 +132,7 @@ public class BasicMenuController {
         /** 获取用户拥有的角色权限 **/
         List<Map> roleMenuList = basicMenuService.getRoleMenu(userId);
 
+        /** 存储用户拥有的菜单、角色到redis **/
         redisUtils.set(RedisConstEnum.MENU.getValue() + userId, resultList, 60 * 60 * 24);
         redisUtils.set(RedisConstEnum.ROLE.getValue() + userId, roleMenuList, 60 * 60 * 24);
 
