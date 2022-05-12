@@ -4,7 +4,8 @@ export default [
         name: '${table.entityPath}',
         component: () => import('@$!{cfg.vuePagePath}/${table.entityPath}/list'),
         meta: {
-            title: "$!{table.comment}管理"
+            title: '$!{table.comment}管理',
+            code: '',//权限标识，对应菜单中的code字段
         },
     }
 ]

@@ -67,8 +67,7 @@ public class BasicMenuController {
     public Object listPage(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String router,
-            @RequestParam(required = false) String icon,
-            @RequestParam(required = false) String remark,
+            @RequestParam(required = false) String code,
             @RequestParam(required = false) Long pageNum,
             @RequestParam(required = false) Long pageSize) {
 
@@ -89,12 +88,8 @@ public class BasicMenuController {
             queryWrapper.like("router", router);
             isSearch = true;
         }
-        if (StringUtils.isNotBlank(icon)) {
-            queryWrapper.like("icon", icon);
-            isSearch = true;
-        }
-        if (StringUtils.isNotBlank(remark)) {
-            queryWrapper.like("remark", remark);
+        if (StringUtils.isNotBlank(code)) {
+            queryWrapper.like("code", code);
             isSearch = true;
         }
 

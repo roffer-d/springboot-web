@@ -45,7 +45,7 @@ public class BasicRoleServiceImpl extends ServiceImpl<BasicRoleMapper,BasicRole>
     @Transactional(rollbackFor = BaseException.class)
     public void saveRoleAuth(JSONObject auth) {
         String roleId = auth.getString("roleId");
-        JSONArray array = auth.getJSONArray("auth");
+        JSONArray array = auth.getJSONArray("authList");
 
         QueryWrapper<BasicRoleMenu> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("role_id",roleId);

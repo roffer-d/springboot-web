@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    private TokenInterceptor tokenInterceptor;
+    private AuthInterceptor authInterceptor;
 
     /*
      * @param tokenInterceptor
@@ -25,8 +25,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
      * @date 2021/5/19 21:41
      */
 
-    public InterceptorConfig(TokenInterceptor tokenInterceptor) {
-        this.tokenInterceptor = tokenInterceptor;
+    public InterceptorConfig(AuthInterceptor authInterceptor) {
+        this.authInterceptor = authInterceptor;
     }
 
     /*
@@ -53,7 +53,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         excludePath.add("/static/**");
 
         //注入拦截器
-        registry.addInterceptor(tokenInterceptor)
+        registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePath);
         WebMvcConfigurer.super.addInterceptors(registry);

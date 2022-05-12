@@ -16,6 +16,7 @@ const api = {
  *
  */
 export function query(params={}){
+    params.auth = 'query'//数据权限，对应角色中配置的权限值
     return form(api.list,params)
 }
 
@@ -28,6 +29,7 @@ export function query(params={}){
  *
  */
 export function update(params={}){
+    params.auth = 'edit'//数据权限，对应角色中配置的权限值
     return form(api.update,params)
 }
 
@@ -40,6 +42,7 @@ export function update(params={}){
  *
  */
 export function del(params={}){
+    params.auth = 'delete'//数据权限，对应角色中配置的权限值
     return form(api.del,params)
 }
 
@@ -52,6 +55,7 @@ export function del(params={}){
  *
  */
 export function save(params={}){
+    params.auth = 'add'//数据权限，对应角色中配置的权限值
     return form(api.save,params)
 }
 
@@ -64,5 +68,6 @@ export function save(params={}){
  *
  */
 export function getById(params={}){
+    params.auth = 'query'//数据权限，对应角色中配置的权限值
     return form(api.getById,params)
 }

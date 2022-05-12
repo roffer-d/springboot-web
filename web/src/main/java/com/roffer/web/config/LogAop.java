@@ -1,6 +1,5 @@
-package com.roffer.web.aop;
+package com.roffer.web.config;
 
-import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.web.annotation.LogRecords;
 import com.roffer.web.modules.sys.entity.BasicLog;

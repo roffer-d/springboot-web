@@ -19,6 +19,7 @@
         SELECT
             m.name,
             m.route,
+            m.code,
             rm.authority_type as auth
         FROM
             basic_role_menu rm,

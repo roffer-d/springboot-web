@@ -49,6 +49,9 @@ public class BasicMenu implements Serializable {
     @ApiModelProperty(value = "路由")
     private String route;
 
+    @ApiModelProperty(value = "权限标识")
+    private String code;
+
     @ApiModelProperty(value = "拥有权限")
     private String auth;
 
