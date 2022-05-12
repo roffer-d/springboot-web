@@ -41,6 +41,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         //放开权限
         List<String> excludePath = new ArrayList<>();
         excludePath.add("/login");
+        excludePath.add("/logOut");
         excludePath.add("/createImg");
         excludePath.add("/checkImg");
         excludePath.add("/swagger-resources/**");
