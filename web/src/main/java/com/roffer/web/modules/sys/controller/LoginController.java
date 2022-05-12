@@ -7,7 +7,7 @@ import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.service.BasicUserService;
-import com.roffer.web.utils.RedisConstEnum;
+import com.roffer.web.enums.RedisConstEnum;
 import com.roffer.web.utils.VerifyImageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

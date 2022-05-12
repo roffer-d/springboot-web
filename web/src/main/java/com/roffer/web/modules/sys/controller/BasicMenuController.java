@@ -5,15 +5,13 @@ import com.roffer.common.utils.BeanUtils;
 import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.common.utils.TreeUtils;
-import com.roffer.web.modules.sys.entity.BasicRole;
-import com.roffer.web.modules.sys.entity.BasicRoleMenu;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import com.roffer.web.modules.sys.entity.BasicMenu;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
-import com.roffer.web.utils.RedisConstEnum;
+import com.roffer.web.enums.RedisConstEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/basicMenu")

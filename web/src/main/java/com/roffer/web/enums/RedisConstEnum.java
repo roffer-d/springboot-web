@@ -1,4 +1,4 @@
-package com.roffer.web.utils;
+package com.roffer.web.enums;
 
 /**
  * @author Dulongfei
