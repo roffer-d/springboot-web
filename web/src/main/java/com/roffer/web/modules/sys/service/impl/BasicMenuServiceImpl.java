@@ -5,12 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.roffer.common.utils.TreeUtils;
+import com.roffer.web.exception.BaseException;
 import com.roffer.web.modules.sys.entity.BasicMenu;
 import com.roffer.web.modules.sys.entity.BasicRoleMenu;
 import com.roffer.web.modules.sys.mapper.BasicMenuMapper;
 import com.roffer.web.modules.sys.mapper.BasicRoleMenuMapper;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -47,6 +49,7 @@ public class BasicMenuServiceImpl extends ServiceImpl<BasicMenuMapper,BasicMenu>
      * @author Roffer
      * @date 2022/5/5 11:01
      */
+    @Transactional(rollbackFor = BaseException.class)
     public void removeMenuAndAuth(String id) {
         /** 查询当前菜单以及所有子菜单 **/
         QueryWrapper<BasicMenu> menuQueryWrapper = new QueryWrapper<>();

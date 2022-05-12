@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.roffer.web.exception.BaseException;
 import com.roffer.web.modules.sys.entity.BasicRole;
 import com.roffer.web.modules.sys.entity.BasicRoleMenu;
 import com.roffer.web.modules.sys.entity.BasicUserRole;
@@ -13,6 +14,7 @@ import com.roffer.web.modules.sys.mapper.BasicRoleMenuMapper;
 import com.roffer.web.modules.sys.mapper.BasicUserRoleMapper;
 import com.roffer.web.modules.sys.service.BasicRoleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -40,6 +42,7 @@ public class BasicRoleServiceImpl extends ServiceImpl<BasicRoleMapper,BasicRole>
     }
 
     @Override
+    @Transactional(rollbackFor = BaseException.class)
     public void saveRoleAuth(JSONObject auth) {
         String roleId = auth.getString("roleId");
         JSONArray array = auth.getJSONArray("auth");
@@ -62,6 +65,7 @@ public class BasicRoleServiceImpl extends ServiceImpl<BasicRoleMapper,BasicRole>
     }
 
     @Override
+    @Transactional(rollbackFor = BaseException.class)
     public void removeRoleAndMenuByIds(String ids) {
         String[] array = ids.split(",");
 
