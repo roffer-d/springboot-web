@@ -1,5 +1,6 @@
 package com.roffer.web.modules.sys.controller;
 
+import com.roffer.web.annotation.LogRecords;
 import com.roffer.web.modules.sys.service.BasicDictService;
 import com.roffer.web.modules.sys.entity.BasicDict;
 
@@ -88,6 +89,7 @@ public class BasicDictController {
         return R.ok().data("total", total).data("list", basicDictList);
     }
 
+    @LogRecords(remark = "添加字典",action = LogRecords.OperLogEnum.ADD)
     @ApiOperation(value = "添加字典")
     @PostMapping("/save")
     public Object save(BasicDict basicDict) {
@@ -95,6 +97,7 @@ public class BasicDictController {
         return R.ok();
     }
 
+    @LogRecords(remark = "更新字典",action = LogRecords.OperLogEnum.EDIT)
     @ApiOperation(value = "更新字典")
     @PostMapping("/update")
     public Object update(BasicDict basicDict) {
@@ -102,6 +105,7 @@ public class BasicDictController {
         return R.ok();
     }
 
+    @LogRecords(remark = "删除字典",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除字典")
     @PostMapping("/delete")
     public Object delete(String id) {
@@ -109,6 +113,7 @@ public class BasicDictController {
         return R.ok();
     }
 
+    @LogRecords(remark = "批量删除字典",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除字典")
     @PostMapping("/deleteByIds")
     public Object deleteByIds(@RequestParam String ids) {

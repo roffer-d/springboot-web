@@ -1,6 +1,7 @@
 package com.roffer.web.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.roffer.web.annotation.LogRecords;
 import com.roffer.web.modules.sys.entity.BasicRoleMenu;
 import com.roffer.web.modules.sys.service.BasicRoleService;
 import com.roffer.web.modules.sys.entity.BasicRole;
@@ -76,6 +77,7 @@ public class BasicRoleController {
         return R.ok().data("total", total).data("list", basicRoleList);
     }
 
+    @LogRecords(remark = "添加角色",action = LogRecords.OperLogEnum.ADD)
     @ApiOperation(value = "添加角色")
     @PostMapping("/save")
     public Object save(BasicRole basicRole) {
@@ -83,6 +85,7 @@ public class BasicRoleController {
         return R.ok();
     }
 
+    @LogRecords(remark = "更新角色",action = LogRecords.OperLogEnum.EDIT)
     @ApiOperation(value = "更新角色")
     @PostMapping("/update")
     public Object update(BasicRole basicRole) {
@@ -90,6 +93,7 @@ public class BasicRoleController {
         return R.ok();
     }
 
+    @LogRecords(remark = "删除角色",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除角色")
     @PostMapping("/delete")
     public Object delete(String id) {
@@ -97,6 +101,7 @@ public class BasicRoleController {
         return R.ok();
     }
 
+    @LogRecords(remark = "批量删除角色",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除角色")
     @PostMapping("/deleteByIds")
     public Object deleteByIds(@RequestParam String ids) {
@@ -111,6 +116,7 @@ public class BasicRoleController {
         return R.ok().data("list",roleAuth);
     }
 
+    @LogRecords(remark = "保存角色权限",action = LogRecords.OperLogEnum.ADD)
     @ApiOperation(value = "保存角色权限")
     @PostMapping("/saveRoleAuth")
     public Object saveRoleAuth(@RequestBody JSONObject auth) {

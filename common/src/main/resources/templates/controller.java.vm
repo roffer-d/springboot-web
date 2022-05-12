@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.roffer.web.annotation.LogRecords;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -41,7 +42,7 @@ import java.util.List;
 @Api("${entity}相关")
 #end
 public class ${entity}Controller {
-    private static final Log logger = LogFactory.getLog(${entity}Controller.class);
+    private static final Logger logger = LoggerFactory.getLogger(${entity}Controller.class);
 
     @Resource
     private ${table.serviceName} ${table.entityPath}Service;
@@ -125,8 +126,10 @@ public class ${entity}Controller {
     }
 
     #if(${table.comment})
+    @LogRecords(remark = "添加${table.comment}数据",action = LogRecords.OperLogEnum.ADD)
     @ApiOperation(value = "添加${table.comment}")
     #else
+    @LogRecords(remark = "添加${table.comment}数据",action = LogRecords.OperLogEnum.ADD)
     @ApiOperation(value = "添加${entity}")
     #end
     @PostMapping("/save")
@@ -136,8 +139,10 @@ public class ${entity}Controller {
     }
 
     #if(${table.comment})
+    @LogRecords(remark = "更新${table.comment}数据",action = LogRecords.OperLogEnum.EDIT)
     @ApiOperation(value = "更新${table.comment}")
     #else
+    @LogRecords(remark = "更新${table.comment}数据",action = LogRecords.OperLogEnum.EDIT)
     @ApiOperation(value = "更新${entity}")
     #end
     @PostMapping("/update")
@@ -147,8 +152,10 @@ public class ${entity}Controller {
     }
 
     #if(${table.comment})
+    @LogRecords(remark = "删除${table.comment}数据",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除${table.comment}")
     #else
+    @LogRecords(remark = "删除${table.comment}数据",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除${entity}")
     #end
     @PostMapping("/delete")
@@ -158,8 +165,10 @@ public class ${entity}Controller {
     }
 
     #if(${table.comment})
+    @LogRecords(remark = "批量删除${table.comment}数据",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除${table.comment}")
     #else
+    @LogRecords(remark = "批量删除${table.comment}数据",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除${entity}")
     #end
     @PostMapping("/deleteByIds")

@@ -3,6 +3,7 @@ package com.roffer.web.modules.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
+import com.roffer.web.annotation.LogRecords;
 import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.entity.BasicUserRole;
 import com.roffer.web.modules.sys.service.BasicUserService;
@@ -92,6 +93,7 @@ public class BasicUserController {
         return R.ok().data("total", total).data("list", basicUserList);
     }
 
+    @LogRecords(remark = "添加用户",action = LogRecords.OperLogEnum.ADD)
     @ApiOperation(value = "添加用户")
     @PostMapping("/save")
     public Object save(BasicUser basicUser) {
@@ -99,6 +101,7 @@ public class BasicUserController {
         return R.ok();
     }
 
+    @LogRecords(remark = "更新用户",action = LogRecords.OperLogEnum.EDIT)
     @ApiOperation(value = "更新用户")
     @PostMapping("/update")
     public Object update(BasicUser basicUser) {
@@ -106,6 +109,7 @@ public class BasicUserController {
         return R.ok();
     }
 
+    @LogRecords(remark = "删除用户",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除用户")
     @PostMapping("/delete")
     public Object delete(String id) {
@@ -113,6 +117,7 @@ public class BasicUserController {
         return R.ok();
     }
 
+    @LogRecords(remark = "批量删除用户",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除用户")
     @PostMapping("/deleteByIds")
     public Object deleteByIds(@RequestParam String ids) {
@@ -128,6 +133,7 @@ public class BasicUserController {
     }
 
     @ApiOperation(value = "保存用户角色")
+    @LogRecords(remark = "保存用户角色",action = LogRecords.OperLogEnum.ADD)
     @PostMapping("/saveRole")
     public Object saveRole(@RequestParam String userId,@RequestParam String roleIds) {
         basicUserService.saveRole(userId,roleIds);

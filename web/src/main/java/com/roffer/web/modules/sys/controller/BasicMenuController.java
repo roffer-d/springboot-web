@@ -5,6 +5,7 @@ import com.roffer.common.utils.BeanUtils;
 import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.common.utils.TreeUtils;
+import com.roffer.web.annotation.LogRecords;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import com.roffer.web.modules.sys.entity.BasicMenu;
 
@@ -146,6 +147,7 @@ public class BasicMenuController {
         return R.ok().data("list", menuTree);
     }
 
+    @LogRecords(remark = "添加菜单",action = LogRecords.OperLogEnum.ADD)
     @ApiOperation(value = "添加菜单")
     @PostMapping("/save")
     public Object save(BasicMenu basicMenu) {
@@ -153,6 +155,7 @@ public class BasicMenuController {
         return R.ok();
     }
 
+    @LogRecords(remark = "更新菜单",action = LogRecords.OperLogEnum.EDIT)
     @ApiOperation(value = "更新菜单")
     @PostMapping("/update")
     public Object update(BasicMenu basicMenu) {
@@ -160,6 +163,7 @@ public class BasicMenuController {
         return R.ok();
     }
 
+    @LogRecords(remark = "删除菜单",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除菜单")
     @PostMapping("/delete")
     public Object delete(String id) {
@@ -167,6 +171,7 @@ public class BasicMenuController {
         return R.ok();
     }
 
+    @LogRecords(remark = "批量删除菜单",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除菜单")
     @PostMapping("/deleteByIds")
     public Object deleteByIds(@RequestParam String ids) {
@@ -174,6 +179,7 @@ public class BasicMenuController {
         return R.ok();
     }
 
+    @LogRecords(remark = "菜单权限配置",action = LogRecords.OperLogEnum.EDIT)
     @ApiOperation(value = "菜单权限配置")
     @PostMapping("/menuAuth")
     public Object menuAuth(@RequestBody JSONObject auth) {

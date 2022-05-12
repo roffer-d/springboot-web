@@ -30,22 +30,6 @@ public class BasicLogController {
     @Resource
     private BasicLogService basicLogService;
 
-    @ApiOperation(value = "根据Id获取操作日志")
-    @PostMapping("/getById")
-    public Object getById(@RequestParam String id) {
-        BasicLog basicLog = basicLogService.getById(id);
-        return R.ok().data("basicLog", basicLog);
-    }
-
-    @ApiOperation(value = "获取全部操作日志")
-    @PostMapping("/list")
-    public Object list() {
-        QueryWrapper<BasicLog> queryWrapper = new QueryWrapper();
-        queryWrapper.orderByDesc("create_time");
-
-        return R.ok().data("list", basicLogService.list(queryWrapper));
-    }
-
     @ApiOperation(value = "分页操作日志")
     @PostMapping("/listPage")
     public Object listPage(
@@ -80,33 +64,5 @@ public class BasicLogController {
         List<BasicLog> basicLogList = basicLogPage.getRecords();
 
         return R.ok().data("total", total).data("list", basicLogList);
-    }
-
-    @ApiOperation(value = "添加操作日志")
-    @PostMapping("/save")
-    public Object save(BasicLog basicLog) {
-        basicLogService.save(basicLog);
-        return R.ok();
-    }
-
-    @ApiOperation(value = "更新操作日志")
-    @PostMapping("/update")
-    public Object update(BasicLog basicLog) {
-        basicLogService.updateById(basicLog);
-        return R.ok();
-    }
-
-    @ApiOperation(value = "删除操作日志")
-    @PostMapping("/delete")
-    public Object delete(String id) {
-        basicLogService.removeById(id);
-        return R.ok();
-    }
-
-    @ApiOperation(value = "批量删除操作日志")
-    @PostMapping("/deleteByIds")
-    public Object deleteByIds(@RequestParam String ids) {
-        basicLogService.removeByIds(Arrays.asList(ids.split(",")));
-        return R.ok();
     }
 }
