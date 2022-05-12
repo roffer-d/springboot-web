@@ -60,6 +60,8 @@ public class AuthInterceptor implements HandlerInterceptor {
                 }
 
                 if(!hasAuth){
+                    /** 无数据操作权限 **/
+
                     response.setCharacterEncoding("UTF-8");
                     response.setContentType("application/json; charset=utf-8");
                     response.setStatus(ConstEnum.SUCCESS.getCode());
@@ -70,6 +72,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
                 return hasAuth;
             }else{
+                /** 登录失效 **/
+
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json; charset=utf-8");
                 response.setStatus(ConstEnum.SUCCESS.getCode());
