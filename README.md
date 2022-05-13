@@ -32,7 +32,7 @@
 * 修改根目录下的vue.config.js文件
     ```
     修改后端接口请求：
-    '/basic': {//对应.env.development中VUE_APP_BASE_URL值
+    '/basic': {// /basic对应.env.development中VUE_APP_BASE_URL值
         target: "http://localhost",//修改成自己的
         changeOrigin: true,
         pathRewrite: {
