@@ -7,6 +7,7 @@ import com.roffer.web.annotation.LogRecords;
 import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.entity.BasicUserRole;
 import com.roffer.web.modules.sys.service.BasicUserService;
+import com.roffer.web.websocket.WebSocketServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
