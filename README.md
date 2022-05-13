@@ -8,6 +8,7 @@
 * 字典管理
 
 运行前准备工作 
+* mysql版本号：8
 * 新建mysql数据库**basic**   
 * 将web模块resources目录下的basic.sql导入到mysql
 * 修改application.yml中**jdbc**连接和**redis**连接（登录和权限认证使用redis存储）
