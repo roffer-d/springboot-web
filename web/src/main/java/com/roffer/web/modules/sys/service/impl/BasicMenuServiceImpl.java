@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,6 +25,11 @@ import java.util.stream.Collectors;
  */
 @Service
 public class BasicMenuServiceImpl extends ServiceImpl<BasicMenuMapper,BasicMenu> implements BasicMenuService {
+    /**
+     * 根菜单
+     **/
+    private String ROOT_MENU_ID = "1518483664025964545";
+
     @Resource
     private BasicMenuMapper menuMapper;
 
@@ -66,30 +72,6 @@ public class BasicMenuServiceImpl extends ServiceImpl<BasicMenuMapper,BasicMenu>
     }
 
     @Override
-    /**
-     * @description 获取用户菜单
-     * @params:
-     *   userId(String): 用户id
-     * @author Roffer
-     * @date 2022/5/5 14:42
-     */
-    public List<BasicMenu> getUserMenu(String userId) {
-        return menuMapper.getUserMenu(userId);
-    }
-
-    @Override
-    /**
-     * @description 获取角色权限
-     * @params:
-     *   userId(String): 用户id
-     * @author Roffer
-     * @date 2022/5/5 16:11
-     */
-    public List<Map> getRoleMenu(String userId) {
-        return roleMenuMapper.getRoleMenu(userId);
-    }
-
-    @Override
     public void menuAuth(JSONObject auth) {
         String menuId = auth.getString("menuId");
         String authList = auth.getString("authList");
@@ -98,5 +80,16 @@ public class BasicMenuServiceImpl extends ServiceImpl<BasicMenuMapper,BasicMenu>
         menu.setAuth(authList);
 
         menuMapper.updateById(menu);
+    }
+
+    @Override
+    public Map<String,Object> getAuth(String userId) {
+        List<Map> role = roleMenuMapper.getRoleMenu(userId);
+        List<BasicMenu> menu = menuMapper.getUserMenu(userId);
+        List<Map<String, Object>> menuList = TreeUtils.buildTree(menu, "id", ROOT_MENU_ID, "pid", "children");
+        Map<String,Object> authMap = new HashMap<>();
+        authMap.put("menu",menuList);
+        authMap.put("role",role);
+        return authMap;
     }
 }

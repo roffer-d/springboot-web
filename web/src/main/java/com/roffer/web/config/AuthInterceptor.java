@@ -39,14 +39,16 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader("Authorization");
         if (StringUtils.isNotBlank(token)) {
-            String redisKey = token.replaceAll("Bearer ", "");
-            if (TokenUtils.verify(token) && null != redisUtils.get(redisKey)) {
+            String userId = TokenUtils.getIdFromToken(token);
+            String redisKey = RedisConstEnum.USER.getValue() + userId;
+
+            if (TokenUtils.verify(token) && redisUtils.hasKey(redisKey)) {
                 boolean hasAuth = false;
                 String code = request.getHeader("code");
                 String auth = request.getHeader("auth");
 
-                String userId = TokenUtils.getIdFromToken(token);
-                List<Map> roleAuthList = (List)redisUtils.get(RedisConstEnum.ROLE.getValue() + userId);
+                Map<String,Object> userMap = redisUtils.get(redisKey,Map.class);
+                List<Map> roleAuthList = (List)userMap.get("role");
 
                 for(Map roleAuth : roleAuthList){
                     String _code = String.valueOf(roleAuth.get("code"));

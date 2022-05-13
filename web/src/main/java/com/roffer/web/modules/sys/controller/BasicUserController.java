@@ -2,8 +2,12 @@ package com.roffer.web.modules.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.roffer.common.http.ConstEnum;
 import com.roffer.common.http.R;
+import com.roffer.common.utils.RedisUtils;
+import com.roffer.common.utils.TokenUtils;
 import com.roffer.web.annotation.LogRecords;
+import com.roffer.web.enums.RedisConstEnum;
 import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.entity.BasicUserRole;
 import com.roffer.web.modules.sys.service.BasicUserService;
@@ -17,8 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/basicUser")
@@ -31,6 +36,9 @@ import java.util.List;
 public class BasicUserController {
     @Resource
     private BasicUserService basicUserService;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @ApiOperation(value = "根据Id获取用户")
     @PostMapping("/getById")
@@ -138,6 +146,36 @@ public class BasicUserController {
     @PostMapping("/saveRole")
     public Object saveRole(@RequestParam String userId,@RequestParam String roleIds) {
         basicUserService.saveRole(userId,roleIds);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "在线用户列表")
+    @PostMapping("/onlineUsers")
+    public Object onlineUsers() {
+        List<Object> redisUserList = redisUtils.getByKeyPrefix(RedisConstEnum.USER.getValue() + "*");
+        List<Object> userList = redisUserList.stream().map(u->((Map)u).get("user")).collect(Collectors.toList());
+        return R.ok().data("list",userList);
+    }
+
+    @ApiOperation(value = "踢出登录用户")
+    @PostMapping("/offLine")
+    public Object offLine(@RequestParam String userId,HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+
+        String redisUserKey = RedisConstEnum.USER.getValue() + userId;
+        Map<String,Object> redisUser = redisUtils.get(redisUserKey,Map.class);
+
+        if(redisUser != null){
+            redisUtils.del(redisUserKey);
+            Map<String,Object> message = new HashMap<>();
+            message.put("code",ConstEnum.OFF_LINE.getCode());
+            message.put("message",ConstEnum.OFF_LINE.getMsg());
+
+            /** 给被踢下线的用户发送消息，在客户端退出登录 **/
+            WebSocketServer.sendToUser(WebSocketServer.OFF_LINE_USER,userId,message);
+        }else{
+            return R.customError(ConstEnum.OFF_LINE.getCode(), ConstEnum.OFF_LINE.getMsg());
+        }
         return R.ok();
     }
 }

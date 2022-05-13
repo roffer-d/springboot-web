@@ -38,6 +38,9 @@ public class BasicUser implements Serializable {
     @ApiModelProperty(value = "邮箱")
     private String email;
 
+    @ApiModelProperty(value = "最后登录时间")
+    private Date lastLoginTime;
+
     @ApiModelProperty(value = "创建时间")
       @TableField(fill = FieldFill.INSERT)
     private Date createTime;

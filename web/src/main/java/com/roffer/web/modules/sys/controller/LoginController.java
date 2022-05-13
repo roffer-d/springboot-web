@@ -5,7 +5,10 @@ import com.roffer.common.http.ConstEnum;
 import com.roffer.common.http.R;
 import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
+import com.roffer.common.utils.TreeUtils;
+import com.roffer.web.modules.sys.entity.BasicMenu;
 import com.roffer.web.modules.sys.entity.BasicUser;
+import com.roffer.web.modules.sys.service.BasicMenuService;
 import com.roffer.web.modules.sys.service.BasicUserService;
 import com.roffer.web.enums.RedisConstEnum;
 import com.roffer.web.utils.VerifyImageUtils;
@@ -22,10 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author Dulongfei
@@ -36,8 +36,16 @@ import java.util.Random;
 @Api("登录")
 public class LoginController {
 
+    /**
+     * 根菜单
+     **/
+    private String ROOT_MENU_ID = "1518483664025964545";
+
     @Resource
     private BasicUserService userService;
+
+    @Resource
+    private BasicMenuService basicMenuService;
 
     @Value("${captcha.template-image}")
     private String templatePath;
@@ -60,10 +68,27 @@ public class LoginController {
             return R.customError(ConstEnum.NO_USER.getCode(), ConstEnum.NO_USER.getMsg());
         } else {
             BasicUser user = userList.get(0);
+            user.setLastLoginTime(new Date());
+
             String token = TokenUtils.generator(user.getId());
-            //token存入redis，有效期1天
-            redisUtils.set(token, user, RedisConstEnum.MENU.getTtl());
-            return R.ok().data("token", token).data("user", user);
+            Map<String,Object> authMap = basicMenuService.getAuth(user.getId());
+
+            /** 登录信息存入redis，有效期1天 **/
+            Map<String,Object> userMap = new HashMap<>();
+            userMap.put("token",token);
+            userMap.put("user",user);
+            userMap.put("menu",authMap.get("menu"));
+            userMap.put("role",authMap.get("role"));
+            redisUtils.set(RedisConstEnum.USER.getValue() + user.getId(), userMap, RedisConstEnum.USER.getTtl());
+
+            /** 更新最后登录时间 **/
+            userService.updateById(user);
+
+            return R.ok()
+                    .data("token", token)
+                    .data("user", user)
+                    .data("menu", authMap.get("menu"))
+                    .data("role", authMap.get("role"));
         }
     }
 
@@ -72,11 +97,8 @@ public class LoginController {
     public Object logOut(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         String userId = TokenUtils.getIdFromToken(token);
-        String redisTokenKey = token.replaceAll("Bearer ", "");
 
-        redisUtils.del(redisTokenKey);
-        redisUtils.del(RedisConstEnum.MENU.getValue() + userId);
-        redisUtils.del(RedisConstEnum.ROLE.getValue() + userId);
+        redisUtils.del(RedisConstEnum.USER.getValue() + userId);
 
         return R.ok();
     }

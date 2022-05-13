@@ -30,24 +30,15 @@ public interface BasicMenuService extends IService<BasicMenu> {
       */
     void removeMenuAndAuth(String id);
 
-    /**
-      * @description 获取用户菜单
-      * @params:
-      *   userId(String): 用户id
-      * @author Roffer
-      * @date 2022/5/5 14:42
-      */
-    List<BasicMenu> getUserMenu(String userId);
-
-    /**
-      * @description 获取角色权限
-      * @params:
-      *   userId(String): 用户id
-      * @author Roffer
-      * @date 2022/5/5 16:11
-      */
-    List<Map> getRoleMenu(String userId);
-
     void menuAuth(JSONObject auth);
+
+    /**
+     * @description 获取用户角色、角色权限
+     * @params:
+     *   userId(String): 用户id
+     * @author Roffer
+     * @date 2022/5/5 16:11
+     */
+    Map<String,Object> getAuth(String userId);
 }
 

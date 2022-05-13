@@ -1,18 +1,17 @@
 package com.roffer.web.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.roffer.common.http.R;
 import com.roffer.common.utils.BeanUtils;
 import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.common.utils.TreeUtils;
 import com.roffer.web.annotation.LogRecords;
-import com.roffer.web.modules.sys.service.BasicMenuService;
-import com.roffer.web.modules.sys.entity.BasicMenu;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.roffer.common.http.R;
 import com.roffer.web.enums.RedisConstEnum;
+import com.roffer.web.modules.sys.entity.BasicMenu;
+import com.roffer.web.modules.sys.service.BasicMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -117,19 +116,17 @@ public class BasicMenuController {
     public Object getAuth(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         String userId = TokenUtils.getIdFromToken(token);
+        String redisUserKey = RedisConstEnum.USER.getValue() + userId;
+        Map<String,Object> redisAuthMap = redisUtils.get(redisUserKey,Map.class);
 
-        /** 获取用户拥有的菜单 **/
-        List<BasicMenu> menuList = basicMenuService.getUserMenu(userId);
-        List<Map<String, Object>> resultList = TreeUtils.buildTree(menuList, "id", ROOT_MENU_ID, "pid", "children");
+        Map<String,Object> authMap = basicMenuService.getAuth(userId);
 
-        /** 获取用户拥有的角色权限 **/
-        List<Map> roleMenuList = basicMenuService.getRoleMenu(userId);
+        redisAuthMap.put("menu",authMap.get("menu"));
+        redisAuthMap.put("role",authMap.get("role"));
 
-        /** 存储用户拥有的菜单、角色到redis **/
-        redisUtils.set(RedisConstEnum.MENU.getValue() + userId, resultList, RedisConstEnum.MENU.getTtl());
-        redisUtils.set(RedisConstEnum.ROLE.getValue() + userId, roleMenuList, RedisConstEnum.ROLE.getTtl());
+        redisUtils.set(redisUserKey,redisAuthMap,RedisConstEnum.USER.getTtl());
 
-        return R.ok().data("menuList", resultList).data("roleMenuList", roleMenuList);
+        return R.ok().data(authMap);
     }
 
     @ApiOperation(value = "菜单树")

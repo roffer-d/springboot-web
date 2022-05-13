@@ -5,10 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -102,6 +99,22 @@ public final class RedisUtils {
             return clazz.cast(obj);
         }
         return null;
+    }
+
+    /**
+      * @description 模糊匹配key，获取redis数据
+      * @param key 模糊key
+      * @author Roffer
+      * @date 2022/5/13 18:40
+      */
+    public List<Object> getByKeyPrefix(String key) {
+        List<Object> resultList = new ArrayList<>();
+        Set<String> keys = redisTemplate.keys(key);
+        for(String k : keys){
+            resultList.add(redisTemplate.opsForValue().get(k));
+        }
+
+        return resultList;
     }
 
     /**

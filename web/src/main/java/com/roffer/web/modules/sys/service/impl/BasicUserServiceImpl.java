@@ -2,6 +2,7 @@ package com.roffer.web.modules.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.roffer.common.utils.RedisUtils;
 import com.roffer.web.exception.BaseException;
 import com.roffer.web.modules.sys.entity.BasicRoleMenu;
 import com.roffer.web.modules.sys.entity.BasicUser;
@@ -30,6 +31,9 @@ public class BasicUserServiceImpl extends ServiceImpl<BasicUserMapper,BasicUser>
 
     @Resource
     private BasicRoleMenuMapper userRoleMenuMapper;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @Override
     @Transactional(rollbackFor = BaseException.class)

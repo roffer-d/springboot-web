@@ -7,8 +7,7 @@ package com.roffer.web.enums;
  */
 public enum RedisConstEnum {
     /** ttl单位秒 **/
-    MENU("用户菜单", "menu_list_",60 * 60 * 24),
-    ROLE("用户角色", "role_list_",60 * 60 * 24),
+    USER("登录用户", "user_",60 * 60 * 24),
     LOGIN_IMAGE_INFO("登录拖拽图片信息", "image_info_",60 * 5);
 
     private String key;

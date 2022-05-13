@@ -26,6 +26,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @ServerEndpoint("/api/websocket/{userId}")
 public class WebSocketServer {
+    /** 踢出登录用户标识 **/
+    public static final String OFF_LINE_USER = "OFF_LINE_USER";
+
+    /** 刷新在线用户标识 **/
+    public static final String REFRESH_ONLINE_USER = "REFRESH_ONLINE_USER";
 
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
@@ -68,7 +73,10 @@ public class WebSocketServer {
         log.info("用户连接:" + userId + ",当前在线人数为:" + getOnlineCount());
         Map<String, Object> msg = new HashMap<>();
         msg.put("type", "init");
-        msg.put("data", R.ok());
+        msg.put("data", new HashMap(){{
+            put("connectCount",getOnlineCount());
+            put("userId",userId);
+        }});
         sendMessage(msg);
     }
 

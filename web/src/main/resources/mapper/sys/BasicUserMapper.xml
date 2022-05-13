@@ -9,6 +9,7 @@
         <result column="account" property="account" />
         <result column="password" property="password" />
         <result column="email" property="email" />
+        <result column="last_login_time" property="lastLoginTime" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="status" property="status" />
