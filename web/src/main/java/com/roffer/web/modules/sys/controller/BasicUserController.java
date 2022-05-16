@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -164,9 +163,7 @@ public class BasicUserController {
 
     @ApiOperation(value = "踢出登录用户")
     @PostMapping("/offLine")
-    public Object offLine(@ApiParam(value = "用户id") @RequestParam String userId,HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-
+    public Object offLine(@ApiParam(value = "用户id") @RequestParam String userId) {
         String redisUserKey = RedisConstEnum.USER.getValue() + userId;
         Map<String,Object> redisUser = redisUtils.get(redisUserKey,Map.class);
 
