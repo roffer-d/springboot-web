@@ -110,8 +110,8 @@ public class LoginController {
             File templateFile = ResourceUtils.getFile("classpath:" + templatePath);
             File targetFile = ResourceUtils.getFile("classpath:" + targetPath + "/" + targetNum + ".png");
             resultMap = VerifyImageUtils.pictureTemplatesCut(templateFile, targetFile, "PNG", "PNG");
-            //缓存5分钟
-            redisUtils.set(cacheKey, resultMap, 5 * 60);
+            //生成的图片信息放入redis，2分钟有效期
+            redisUtils.set(cacheKey, resultMap, RedisConstEnum.LOGIN_IMAGE_INFO.getTtl());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
