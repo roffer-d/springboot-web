@@ -1,10 +1,10 @@
 package com.roffer.common.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public final class RedisUtils {
 
-    @Autowired
+    @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
 
