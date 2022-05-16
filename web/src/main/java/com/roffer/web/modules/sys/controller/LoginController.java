@@ -5,15 +5,14 @@ import com.roffer.common.http.ConstEnum;
 import com.roffer.common.http.R;
 import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
-import com.roffer.common.utils.TreeUtils;
-import com.roffer.web.modules.sys.entity.BasicMenu;
+import com.roffer.web.enums.RedisConstEnum;
 import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import com.roffer.web.modules.sys.service.BasicUserService;
-import com.roffer.web.enums.RedisConstEnum;
 import com.roffer.web.utils.VerifyImageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,13 +32,8 @@ import java.util.*;
  * @date 2022/4/18 16:35
  */
 @RestController
-@Api("登录")
+@Api(tags = "登录相关")
 public class LoginController {
-
-    /**
-     * 根菜单
-     **/
-    private String ROOT_MENU_ID = "1518483664025964545";
 
     @Resource
     private BasicUserService userService;
@@ -58,7 +52,9 @@ public class LoginController {
 
     @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public Object login(@RequestParam String account, @RequestParam String password) {
+    public Object login(
+            @ApiParam(value = "登录账号") @RequestParam String account,
+            @ApiParam(value = "登录密码") @RequestParam String password) {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("account", account);
         wrapper.eq("password", password);
@@ -130,7 +126,9 @@ public class LoginController {
 
     @ApiOperation(value = "验证滑块图片")
     @PostMapping("/checkImg")
-    public Object checkImg(@RequestParam String cacheKey, @RequestParam int left) {
+    public Object checkImg(
+            @ApiParam(value = "缓存key值") @RequestParam String cacheKey,
+            @ApiParam(value = "x偏移量") @RequestParam int left) {
         Boolean result = false;
         Map<String, Object> map = redisUtils.get(cacheKey, Map.class);
         if (!map.isEmpty()) {

@@ -14,6 +14,7 @@ import com.roffer.web.modules.sys.entity.BasicMenu;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  * @author roffer
  * @date 2022-04-25
  */
-@Api("菜单相关")
+@Api(tags = "菜单相关")
 public class BasicMenuController {
     /**
      * 根菜单
@@ -47,7 +48,7 @@ public class BasicMenuController {
 
     @ApiOperation(value = "根据Id获取菜单")
     @PostMapping("/getById")
-    public Object getById(@RequestParam String id) {
+    public Object getById(@ApiParam(value = "主键id") @RequestParam String id) {
         BasicMenu basicMenu = basicMenuService.getById(id);
         return R.ok().data("basicMenu", basicMenu);
     }
@@ -64,10 +65,15 @@ public class BasicMenuController {
     @ApiOperation(value = "分页菜单")
     @PostMapping("/listPage")
     public Object listPage(
+            @ApiParam(value = "菜单名称")
             @RequestParam(required = false) String name,
+            @ApiParam(value = "路由")
             @RequestParam(required = false) String router,
+            @ApiParam(value = "菜单编码")
             @RequestParam(required = false) String code,
+            @ApiParam(value = "页码")
             @RequestParam(required = false) Long pageNum,
+            @ApiParam(value = "每页条数")
             @RequestParam(required = false) Long pageSize) {
 
         Page<BasicMenu> basicMenuPage = null;
@@ -158,7 +164,7 @@ public class BasicMenuController {
     @LogRecords(remark = "删除菜单",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除菜单")
     @PostMapping("/delete")
-    public Object delete(String id) {
+    public Object delete(@ApiParam(value = "主键id") String id) {
         basicMenuService.removeMenuAndAuth(id);
         return R.ok();
     }
@@ -166,7 +172,7 @@ public class BasicMenuController {
     @LogRecords(remark = "批量删除菜单",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除菜单")
     @PostMapping("/deleteByIds")
-    public Object deleteByIds(@RequestParam String ids) {
+    public Object deleteByIds(@ApiParam(value = "主键id，多个逗号隔开") @RequestParam String ids) {
         basicMenuService.removeByIds(Arrays.asList(ids.split(",")));
         return R.ok();
     }
@@ -174,7 +180,7 @@ public class BasicMenuController {
     @LogRecords(remark = "菜单权限配置",action = LogRecords.OperLogEnum.EDIT)
     @ApiOperation(value = "菜单权限配置")
     @PostMapping("/menuAuth")
-    public Object menuAuth(@RequestBody JSONObject auth) {
+    public Object menuAuth(@ApiParam(value = "权限json数据") @RequestBody JSONObject auth) {
         basicMenuService.menuAuth(auth);
         return R.ok();
     }

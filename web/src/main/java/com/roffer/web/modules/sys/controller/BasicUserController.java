@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.ConstEnum;
 import com.roffer.common.http.R;
 import com.roffer.common.utils.RedisUtils;
-import com.roffer.common.utils.TokenUtils;
 import com.roffer.web.annotation.LogRecords;
 import com.roffer.web.enums.RedisConstEnum;
 import com.roffer.web.modules.sys.entity.BasicUser;
@@ -14,6 +13,7 @@ import com.roffer.web.modules.sys.service.BasicUserService;
 import com.roffer.web.websocket.WebSocketServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,7 +35,7 @@ import java.util.stream.Collectors;
  * @author roffer
  * @date 2022-04-25
  */
-@Api("用户相关")
+@Api(tags = "用户相关")
 public class BasicUserController {
     @Resource
     private BasicUserService basicUserService;
@@ -42,7 +45,7 @@ public class BasicUserController {
 
     @ApiOperation(value = "根据Id获取用户")
     @PostMapping("/getById")
-    public Object getById(@RequestParam String id) {
+    public Object getById(@ApiParam(value = "主键id") @RequestParam String id) {
         BasicUser basicUser = basicUserService.getById(id);
         return R.ok().data("basicUser", basicUser);
     }
@@ -59,12 +62,17 @@ public class BasicUserController {
     @ApiOperation(value = "分页用户")
     @PostMapping("/listPage")
     public Object listPage(
+            @ApiParam(value = "真实姓名")
             @RequestParam(required = false) String name,
+            @ApiParam(value = "登录账号")
             @RequestParam(required = false) String account,
-            @RequestParam(required = false) String password,
+            @ApiParam(value = "邮箱")
             @RequestParam(required = false) String email,
+            @ApiParam(value = "状态")
             @RequestParam(required = false) String status,
+            @ApiParam(value = "页码")
             @RequestParam(required = false) Long pageNum,
+            @ApiParam(value = "每页条数")
             @RequestParam(required = false) Long pageSize) {
 
         Page<BasicUser> basicUserPage = null;
@@ -80,9 +88,6 @@ public class BasicUserController {
         }
         if (StringUtils.isNotBlank(account)) {
             queryWrapper.like("account", account);
-        }
-        if (StringUtils.isNotBlank(password)) {
-            queryWrapper.like("password", password);
         }
         if (StringUtils.isNotBlank(email)) {
             queryWrapper.like("email", email);
@@ -121,7 +126,7 @@ public class BasicUserController {
     @LogRecords(remark = "删除用户",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除用户")
     @PostMapping("/delete")
-    public Object delete(String id) {
+    public Object delete(@ApiParam(value = "主键id") String id) {
         basicUserService.removeUserAndRole(id);
         return R.ok();
     }
@@ -129,14 +134,14 @@ public class BasicUserController {
     @LogRecords(remark = "批量删除用户",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除用户")
     @PostMapping("/deleteByIds")
-    public Object deleteByIds(@RequestParam String ids) {
+    public Object deleteByIds(@ApiParam(value = "主键id，多个逗号隔开") @RequestParam String ids) {
         basicUserService.removeByIds(Arrays.asList(ids.split(",")));
         return R.ok();
     }
 
     @ApiOperation(value = "获取用户角色")
     @PostMapping("/userRole")
-    public Object userRole(@RequestParam String userId) {
+    public Object userRole(@ApiParam(value = "用户id") @RequestParam String userId) {
         List<BasicUserRole> basicUserRoles = basicUserService.userRole(userId);
         return R.ok().data("list",basicUserRoles);
     }
@@ -159,7 +164,7 @@ public class BasicUserController {
 
     @ApiOperation(value = "踢出登录用户")
     @PostMapping("/offLine")
-    public Object offLine(@RequestParam String userId,HttpServletRequest request) {
+    public Object offLine(@ApiParam(value = "用户id") @RequestParam String userId,HttpServletRequest request) {
         String token = request.getHeader("Authorization");
 
         String redisUserKey = RedisConstEnum.USER.getValue() + userId;

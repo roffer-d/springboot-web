@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,14 +27,14 @@ import java.util.List;
  * @author Roffer
  * @date 2022-05-06
  */
-@Api("字典相关")
+@Api(tags = "字典相关")
 public class BasicDictController {
     @Resource
     private BasicDictService basicDictService;
 
     @ApiOperation(value = "根据Id获取字典")
     @PostMapping("/getById")
-    public Object getById(@RequestParam String id) {
+    public Object getById(@ApiParam(value = "主键id") @RequestParam String id) {
         BasicDict basicDict = basicDictService.getById(id);
         return R.ok().data("basicDict", basicDict);
     }
@@ -51,11 +52,17 @@ public class BasicDictController {
     @ApiOperation(value = "分页字典")
     @PostMapping("/listPage")
     public Object listPage(
+            @ApiParam(value = "字典名称")
             @RequestParam(required = false) String name,
+            @ApiParam(value = "字典编码")
             @RequestParam(required = false) String code,
+            @ApiParam(value = "字典类型")
             @RequestParam(required = false) String type,
+            @ApiParam(value = "字典描述")
             @RequestParam(required = false) String remark,
+            @ApiParam(value = "页数")
             @RequestParam(required = false) Long pageNum,
+            @ApiParam(value = "每页条数")
             @RequestParam(required = false) Long pageSize) {
 
         Page<BasicDict> basicDictPage = null;
@@ -108,7 +115,7 @@ public class BasicDictController {
     @LogRecords(remark = "删除字典",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除字典")
     @PostMapping("/delete")
-    public Object delete(String id) {
+    public Object delete(@ApiParam(value = "主键id") String id) {
         basicDictService.removeById(id);
         return R.ok();
     }
@@ -116,14 +123,14 @@ public class BasicDictController {
     @LogRecords(remark = "批量删除字典",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除字典")
     @PostMapping("/deleteByIds")
-    public Object deleteByIds(@RequestParam String ids) {
+    public Object deleteByIds(@ApiParam(value = "id，多个逗号隔开") @RequestParam String ids) {
         basicDictService.removeByIds(Arrays.asList(ids.split(",")));
         return R.ok();
     }
 
     @ApiOperation(value = "获取分类下的字典数据")
     @PostMapping("/getDict")
-    public Object getDict(@RequestParam String type) {
+    public Object getDict(@ApiParam(value = "字典类型") @RequestParam String type) {
         QueryWrapper<BasicDict> queryWrapper = new QueryWrapper();
         queryWrapper.eq("type",type);
 

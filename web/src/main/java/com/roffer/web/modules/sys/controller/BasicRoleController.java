@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,14 +27,14 @@ import java.util.Map;
  * @author roffer
  * @date 2022-04-25
  */
-@Api("角色相关")
+@Api(tags = "角色相关")
 public class BasicRoleController {
     @Resource
     private BasicRoleService basicRoleService;
 
     @ApiOperation(value = "根据Id获取角色")
     @PostMapping("/getById")
-    public Object getById(@RequestParam String id) {
+    public Object getById(@ApiParam(value = "主键id") @RequestParam String id) {
         BasicRole basicRole = basicRoleService.getById(id);
         return R.ok().data("basicRole", basicRole);
     }
@@ -50,8 +51,11 @@ public class BasicRoleController {
     @ApiOperation(value = "分页角色")
     @PostMapping("/listPage")
     public Object listPage(
+            @ApiParam(value = "角色名称")
             @RequestParam(required = false) String name,
+            @ApiParam(value = "页码")
             @RequestParam(required = false) Long pageNum,
+            @ApiParam(value = "每页条数")
             @RequestParam(required = false) Long pageSize) {
 
         Page<BasicRole> basicRolePage = null;
@@ -96,7 +100,7 @@ public class BasicRoleController {
     @LogRecords(remark = "删除角色",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "删除角色")
     @PostMapping("/delete")
-    public Object delete(String id) {
+    public Object delete(@ApiParam(value = "主键id") String id) {
         basicRoleService.removeRoleAndMenuByIds(id);
         return R.ok();
     }
@@ -104,14 +108,14 @@ public class BasicRoleController {
     @LogRecords(remark = "批量删除角色",action = LogRecords.OperLogEnum.DELETE)
     @ApiOperation(value = "批量删除角色")
     @PostMapping("/deleteByIds")
-    public Object deleteByIds(@RequestParam String ids) {
+    public Object deleteByIds(@ApiParam(value = "主键id，多个逗号隔开") @RequestParam String ids) {
         basicRoleService.removeRoleAndMenuByIds(ids);
         return R.ok();
     }
 
     @ApiOperation(value = "获取角色关联的权限")
     @PostMapping("/getRoleAuth")
-    public Object getRoleAuth(@RequestParam String roleId) {
+    public Object getRoleAuth(@ApiParam(value = "角色id") @RequestParam String roleId) {
         List<BasicRoleMenu> roleAuth = basicRoleService.getRoleAuth(roleId);
         return R.ok().data("list",roleAuth);
     }
@@ -119,7 +123,7 @@ public class BasicRoleController {
     @LogRecords(remark = "保存角色权限",action = LogRecords.OperLogEnum.ADD)
     @ApiOperation(value = "保存角色权限")
     @PostMapping("/saveRoleAuth")
-    public Object saveRoleAuth(@RequestBody JSONObject auth) {
+    public Object saveRoleAuth(@ApiParam(value = "角色权限json数据") @RequestBody JSONObject auth) {
         basicRoleService.saveRoleAuth(auth);
         return R.ok();
     }

@@ -42,6 +42,8 @@
         <cglib-nodep>3.2.4</cglib-nodep>
         <fastjson>2.0.1</fastjson>
         <jackson-core>2.11.3</jackson-core>
+        <swagger-annotations>1.5.21</swagger-annotations>
+        <swagger-models>1.5.21</swagger-models>
     </properties>
 
     <dependencies>
@@ -70,11 +72,33 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${springfox-swagger2}</version>
+            <!--先是排除有问题的包-->
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-models</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox-swagger-ui}</version>
+        </dependency>
+        <!--然后手动加入没问题的包-->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger-models}</version>
         </dependency>
     </dependencies>
 
