@@ -10,6 +10,7 @@ import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.service.BasicMenuService;
 import com.roffer.web.modules.sys.service.BasicUserService;
 import com.roffer.web.utils.VerifyImageUtils;
+import com.roffer.web.websocket.WebSocketServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -65,9 +66,22 @@ public class LoginController {
         } else {
             BasicUser user = userList.get(0);
             user.setLastLoginTime(new Date());
+            String userId = user.getId();
+            String redisUserKey = RedisConstEnum.USER.getValue() + userId;
 
-            String token = TokenUtils.generator(user.getId());
-            Map<String,Object> authMap = basicMenuService.getAuth(user.getId());
+            Map<String,Object> redisUser = redisUtils.get(redisUserKey,Map.class);
+            if(redisUser != null){
+                redisUtils.del(redisUserKey);
+                Map<String,Object> message = new HashMap<>();
+                message.put("code",ConstEnum.OFF_LINE.getCode());
+                message.put("message",ConstEnum.OFF_LINE.getMsg());
+
+                /** 给被踢下线的用户发送消息，在客户端退出登录 **/
+                WebSocketServer.sendToUser(WebSocketServer.OFF_LINE_USER,userId,message);
+            }
+
+            String token = TokenUtils.generator(userId);
+            Map<String,Object> authMap = basicMenuService.getAuth(userId);
 
             /** 登录信息存入redis，有效期1天 **/
             Map<String,Object> userMap = new HashMap<>();
@@ -75,7 +89,7 @@ public class LoginController {
             userMap.put("user",user);
             userMap.put("menu",authMap.get("menu"));
             userMap.put("role",authMap.get("role"));
-            redisUtils.set(RedisConstEnum.USER.getValue() + user.getId(), userMap, RedisConstEnum.USER.getTtl());
+            redisUtils.set(redisUserKey, userMap, RedisConstEnum.USER.getTtl());
 
             /** 更新最后登录时间 **/
             userService.updateById(user);
