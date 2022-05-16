@@ -8,7 +8,7 @@ package com.roffer.web.enums;
 public enum RedisConstEnum {
     /** ttl单位秒 **/
     USER("登录用户", "user_",60 * 60 * 24),
-    LOGIN_IMAGE_INFO("登录拖拽图片信息", "image_info_",60 * 5);
+    LOGIN_IMAGE_INFO("登录拖拽图片信息", "image_info_",60 * 2);
 
     private String key;
     private String value;
