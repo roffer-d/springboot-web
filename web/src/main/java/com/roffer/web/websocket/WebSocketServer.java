@@ -29,9 +29,6 @@ public class WebSocketServer {
     /** 踢出登录用户标识 **/
     public static final String OFF_LINE_USER = "OFF_LINE_USER";
 
-    /** 刷新在线用户标识 **/
-    public static final String REFRESH_ONLINE_USER = "REFRESH_ONLINE_USER";
-
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
      */
