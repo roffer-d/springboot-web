@@ -1,14 +1,13 @@
 package com.roffer.web.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.roffer.web.annotation.LogRecords;
-import com.roffer.web.modules.sys.entity.BasicRoleMenu;
-import com.roffer.web.modules.sys.service.BasicRoleService;
-import com.roffer.web.modules.sys.entity.BasicRole;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.roffer.common.http.R;
+import com.roffer.web.annotation.LogRecords;
+import com.roffer.web.modules.sys.entity.BasicRole;
+import com.roffer.web.modules.sys.entity.BasicRoleMenu;
+import com.roffer.web.modules.sys.service.BasicRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -16,9 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/basicRole")
