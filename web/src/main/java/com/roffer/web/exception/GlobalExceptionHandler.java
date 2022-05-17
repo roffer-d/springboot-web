@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = BaseException.class)
     public R baseExceptionHandler(BaseException e) {
         logger.error("发生业务异常，异常信息：" + e.getMessage());
+        e.printStackTrace();
         return R.customError(e.getCode(),e.getMessage());
     }
 
@@ -37,6 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = NullPointerException.class)
     public R exceptionHandler(NullPointerException e) {
         logger.error("发生空指针异常，异常信息：" + e.getMessage());
+        e.printStackTrace();
         return R.customError(ConstEnum.FAIL.getCode(),ConstEnum.FAIL.getMsg());
     }
 
@@ -49,6 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public R exceptionHandler(Exception e) {
         logger.error("未知异常，异常信息：" + e.getMessage());
+        e.printStackTrace();
         return R.customError(ConstEnum.FAIL.getCode(),ConstEnum.FAIL.getMsg());
     }
 }
