@@ -1,7 +1,9 @@
 package com.roffer.web.config;
 
+import com.roffer.common.utils.RedisUtils;
 import com.roffer.common.utils.TokenUtils;
 import com.roffer.web.annotation.LogRecords;
+import com.roffer.web.enums.RedisConstEnum;
 import com.roffer.web.modules.sys.entity.BasicLog;
 import com.roffer.web.modules.sys.entity.BasicUser;
 import com.roffer.web.modules.sys.service.BasicLogService;
@@ -20,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * @author Roffer
@@ -37,14 +40,18 @@ public class LogAop {
     @Resource
     private BasicUserService basicUserService;
 
+    @Resource
+    private RedisUtils redisUtils;
+
     /**
      * 定义切入点
      */
     @Pointcut("@annotation( com.roffer.web.annotation.LogRecords )")
-    public void OperLogs() {}
+    public void OperLogs() {
+    }
 
     @Before(value = "OperLogs()")
-    public void logBefore(JoinPoint joinPoint){
+    public void logBefore(JoinPoint joinPoint) {
         try {
             //获取当前类象
             Class<?> clazz = joinPoint.getTarget().getClass();
@@ -68,14 +75,16 @@ public class LogAop {
             // 获取操作人
             String token = request.getHeader("Authorization");
             String userId = TokenUtils.getIdFromToken(token);
-            BasicUser user = basicUserService.getById(userId);
+//            BasicUser user = basicUserService.getById(userId);
+            Map<String, Object> redisUserMap = redisUtils.get(RedisConstEnum.USER.getValue() + userId, Map.class);
+            BasicUser user = (BasicUser)redisUserMap.get("user");
 
             BasicLog basicLog = new BasicLog();
             basicLog.setRemark(remark);
             basicLog.setUserId(userId);
             basicLog.setUserName(user.getName());
             basicLogService.save(basicLog);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("写入操作日志失败！", e.getMessage());
         }
     }

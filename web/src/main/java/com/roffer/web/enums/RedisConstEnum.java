@@ -38,8 +38,8 @@ public enum RedisConstEnum {
         this.ttl = ttl;
     }
 
-    private RedisConstEnum(String msg, String value,long ttl) {
-        this.key = msg;
+    private RedisConstEnum(String key, String value,long ttl) {
+        this.key = key;
         this.value = value;
         this.ttl = ttl;
     }
