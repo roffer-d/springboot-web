@@ -119,7 +119,7 @@ public class LoginController {
         Map<String, Object> resultMap = new HashMap<>();
         String cacheKey = RedisConstEnum.LOGIN_IMAGE_INFO.getValue() + System.currentTimeMillis();
         try {
-            Integer targetNum = new Random().nextInt(4) + 1;
+            Integer targetNum = new Random().nextInt(3) + 1;
 
             File templateFile = ResourceUtils.getFile("classpath:" + templatePath);
             File targetFile = ResourceUtils.getFile("classpath:" + targetPath + "/" + targetNum + ".png");
